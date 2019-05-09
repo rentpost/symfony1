@@ -1,5 +1,7 @@
 <?php
 
+use Rentpost\Sprocket\Environment\Detective as EnvironmentDetective;
+
 /*
  * This file is part of the symfony package.
  * (c) 2004-2006 Fabien Potencier <fabien.potencier@symfony-project.com>
@@ -439,6 +441,11 @@ function include_metas()
   $i18n = sfConfig::get('sf_i18n') ? $context->getI18N() : null;
   foreach ($context->getResponse()->getMetas() as $name => $content)
   {
+    if ($name === "robots") {
+      if (!EnvironmentDetective::getInstance()->isProduction()) {
+        $content = "noindex, nofollow";
+      }
+    }
     echo tag('meta', array('name' => $name, 'content' => null === $i18n ? $content : $i18n->__($content)))."\n";
   }
 }

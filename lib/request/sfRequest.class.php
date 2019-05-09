@@ -1,5 +1,7 @@
 <?php
 
+use Rentpost\Sprocket\Log\Dispatcher as LogDispatcher;
+
 /*
  * This file is part of the symfony package.
  * (c) 2004-2006 Fabien Potencier <fabien.potencier@symfony-project.com>
@@ -302,6 +304,8 @@ abstract class sfRequest implements ArrayAccess
    */
   public function setParameter($name, $value)
   {
+    LogDispatcher::getInstance()->notice('stupid sf1 method `sfRequest::setParameter()` been called, avoid calling this if possible');
+
     $this->parameterHolder->set($name, $value);
   }
 

@@ -4,7 +4,7 @@
  * This file is part of the symfony package.
  * (c) 2004-2006 Fabien Potencier <fabien.potencier@symfony-project.com>
  * (c) 2004-2006 Sean Kerr <sean@code-box.org>
- * 
+ *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
@@ -42,7 +42,7 @@ class sfBasicSecurityUser extends sfUser implements sfSecurityUser
 
   /**
    * Returns the current user's credentials.
-   * 
+   *
    * @return array
    */
   public function getCredentials()
@@ -236,12 +236,12 @@ class sfBasicSecurityUser extends sfUser implements sfSecurityUser
    *             Set to false to disable
    *
    * @param sfEventDispatcher $dispatcher  An sfEventDispatcher instance.
-   * @param sfStorage         $storage     An sfStorage instance.
+   * @param \Rentpost\Cog\SessionStorageLegacy         $storage     An \Rentpost\Cog\SessionStorageLegacy instance.
    * @param array             $options     An associative array of options.
    *
    * @see sfUser
    */
-  public function initialize(sfEventDispatcher $dispatcher, sfStorage $storage, $options = array())
+  public function initialize(sfEventDispatcher $dispatcher, \Rentpost\Cog\SessionStorageLegacy $storage, $options = array())
   {
     // initialize parent
     parent::initialize($dispatcher, $storage, $options);
@@ -256,7 +256,7 @@ class sfBasicSecurityUser extends sfUser implements sfSecurityUser
     {
       ini_set('session.gc_maxlifetime', $this->options['timeout']);
     }
-
+    
     // read data from storage
     $this->authenticated = $storage->read(self::AUTH_NAMESPACE);
     $this->credentials   = $storage->read(self::CREDENTIAL_NAMESPACE);

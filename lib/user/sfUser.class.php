@@ -49,7 +49,7 @@ class sfUser implements ArrayAccess
    * @param sfStorage         $storage
    * @param array             $options
    */
-  public function __construct(sfEventDispatcher $dispatcher, sfStorage $storage, $options = array())
+  public function __construct(sfEventDispatcher $dispatcher, \Rentpost\Cog\SessionStorageLegacy $storage, $options = array())
   {
     $this->initialize($dispatcher, $storage, $options);
 
@@ -71,12 +71,12 @@ class sfUser implements ArrayAccess
    *  * logging:         Whether to enable logging (false by default)
    *
    * @param sfEventDispatcher $dispatcher  An sfEventDispatcher instance.
-   * @param sfStorage         $storage     An sfStorage instance.
+   * @param \Rentpost\Cog\SessionStorageLegacy         $storage     An \Rentpost\Cog\SessionStorageLegacy instance.
    * @param array             $options     An associative array of options.
    *
    * @return void
    */
-  public function initialize(sfEventDispatcher $dispatcher, sfStorage $storage, $options = array())
+  public function initialize(sfEventDispatcher $dispatcher, \Rentpost\Cog\SessionStorageLegacy $storage, $options = array())
   {
     $this->dispatcher = $dispatcher;
     $this->storage    = $storage;

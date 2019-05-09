@@ -1,5 +1,7 @@
 <?php
 
+use Rentpost\Sprocket\Log\Dispatcher as LogDispatcher;
+
 /*
  * This file is part of the symfony package.
  * (c) 2004-2006 Fabien Potencier <fabien.potencier@symfony-project.com>
@@ -72,7 +74,7 @@ class sfException extends Exception
    */
   static public function clearLastException()
   {
-    self::$lastException = null;
+  	self::$lastException = null;
   }
 
   /**
@@ -89,8 +91,7 @@ class sfException extends Exception
 
     if (!sfConfig::get('sf_test'))
     {
-      // log all exceptions in php log
-      error_log($exception->getMessage());
+      LogDispatcher::getInstance()->logException($exception);
 
       // clean current output buffer
       while (ob_get_level())
@@ -102,31 +103,10 @@ class sfException extends Exception
       }
 
       if (sfConfig::get('sf_compressed')) {
-        ob_start('ob_gzhandler');
+          ob_start('ob_gzhandler');
       }
 
       header('HTTP/1.0 500 Internal Server Error');
-    }
-
-    if (version_compare(PHP_VERSION, '7.0.0') >= 0)
-    {
-      try
-      {
-        $this->outputStackTrace($exception);
-      }
-      catch (Throwable $e)
-      {
-      }
-    }
-    else
-    {
-      try
-      {
-        $this->outputStackTrace($exception);
-      }
-      catch (Exception $e)
-      {
-      }
     }
 
     if (!sfConfig::get('sf_test'))
@@ -135,135 +115,6 @@ class sfException extends Exception
     }
   }
 
-  /**
-   * Gets the stack trace for this exception.
-   * @param Exception|Throwable $exception
-   */
-  static protected function outputStackTrace($exception)
-  {
-    $format = 'html';
-    $code   = '500';
-    $text   = 'Internal Server Error';
-
-    $response = null;
-    if (class_exists('sfContext', false) && sfContext::hasInstance() && is_object($request = sfContext::getInstance()->getRequest()) && is_object($response = sfContext::getInstance()->getResponse()))
-    {
-      /** @var $request sfWebRequest */
-      /** @var $response sfWebResponse */
-
-      $dispatcher = sfContext::getInstance()->getEventDispatcher();
-
-      if (sfConfig::get('sf_logging_enabled'))
-      {
-        $priority = $exception instanceof sfError404Exception ? sfLogger::ERR : sfLogger::CRIT;
-        $dispatcher->notify(new sfEvent($exception, 'application.log', array($exception->getMessage(), 'priority' => $priority)));
-      }
-
-      $event = $dispatcher->notifyUntil(new sfEvent($exception, 'application.throw_exception'));
-      if ($event->isProcessed())
-      {
-        return;
-      }
-
-      if ($response->getStatusCode() < 300)
-      {
-        // status code has already been sent, but is included here for the purpose of testing
-        $response->setStatusCode(500);
-      }
-
-      $response->setContentType('text/html');
-
-      if (!sfConfig::get('sf_test'))
-      {
-        foreach ($response->getHttpHeaders() as $name => $value)
-        {
-          header($name.': '.$value);
-        }
-      }
-
-      $code = $response->getStatusCode();
-      $text = $response->getStatusText();
-
-      $format = $request->getRequestFormat();
-      if (!$format)
-      {
-        $format = 'html';
-      }
-
-      if ($mimeType = $request->getMimeType($format))
-      {
-        $response->setContentType($mimeType);
-      }
-    }
-    else
-    {
-      // a backward compatible default
-      if (!sfConfig::get('sf_test'))
-      {
-        header('Content-Type: text/html; charset='.sfConfig::get('sf_charset', 'utf-8'));
-      }
-    }
-
-    // send an error 500 if not in debug mode
-    if (!sfConfig::get('sf_debug'))
-    {
-      if ($template = self::getTemplatePathForError($format, false))
-      {
-        include $template;
-        return;
-      }
-    }
-
-    // when using CLI, we force the format to be TXT. Compare exactly to
-    // the string 'cli' because the php 5.4 server is identified by 'cli-server'
-    if ('cli' == PHP_SAPI)
-    {
-      $format = 'txt';
-    }
-
-    $message = null === $exception->getMessage() ? 'n/a' : $exception->getMessage();
-    $name    = get_class($exception);
-    $traces  = self::getTraces($exception, $format);
-
-    // dump main objects values
-    $sf_settings = '';
-    $settingsTable = $requestTable = $responseTable = $globalsTable = $userTable = '';
-    if (class_exists('sfContext', false) && sfContext::hasInstance())
-    {
-      $context = sfContext::getInstance();
-      $settingsTable = self::formatArrayAsHtml(sfDebug::settingsAsArray());
-      $requestTable  = self::formatArrayAsHtml(sfDebug::requestAsArray($context->getRequest()));
-      $responseTable = self::formatArrayAsHtml(sfDebug::responseAsArray($context->getResponse()));
-      $userTable     = self::formatArrayAsHtml(sfDebug::userAsArray($context->getUser()));
-      $globalsTable  = self::formatArrayAsHtml(sfDebug::globalsAsArray());
-    }
-
-    if (isset($response) && $response)
-    {
-      $response->sendHttpHeaders();
-    }
-
-    if ($template = self::getTemplatePathForError($format, true))
-    {
-      if (isset($dispatcher))
-      {
-        ob_start();
-        include $template;
-        $content = ob_get_clean();
-
-        $event = $dispatcher->filter(new sfEvent($response, 'response.filter_content'), $content);
-
-        echo $event->getReturnValue();
-      }
-      else
-      {
-        include $template;
-      }
-
-      return;
-    }
-
-  }
 
   /**
    * Returns the path for the template error message.

@@ -395,10 +395,8 @@ class sfContext implements ArrayAccess
 
   /**
    * Retrieve the storage.
-   *
-   * @return sfStorage The current sfStorage implementation instance.
    */
-  public function getStorage()
+  public function getStorage(): \Rentpost\Cog\SessionStorageLegacy
   {
     return isset($this->factories['storage']) ? $this->factories['storage'] : null;
   }

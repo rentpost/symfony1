@@ -1,5 +1,7 @@
 <?php
 
+use Rentpost\Bridge\Symfony1\sfAutoload;
+
 /*
  * This file is part of the symfony package.
  * (c) Fabien Potencier <fabien.potencier@symfony-project.com>
@@ -38,7 +40,12 @@ abstract class sfApplicationConfiguration extends ProjectConfiguration
    * @param string            $rootDir        The project root directory
    * @param sfEventDispatcher $dispatcher     An event dispatcher
    */
-  public function __construct($environment, $debug, $rootDir = null, sfEventDispatcher $dispatcher = null)
+  public function __construct(
+      $environment,
+      $debug,
+      $rootDir = null,
+      sfEventDispatcher $dispatcher = null
+  )
   {
     $this->environment = $environment;
     $this->debug       = (boolean) $debug;
@@ -114,7 +121,7 @@ abstract class sfApplicationConfiguration extends ProjectConfiguration
     sfAutoload::getInstance()->register();
     if ($this->isDebug())
     {
-      sfAutoloadAgain::getInstance()->register();
+      sfAutoload::getInstance()->register();
     }
 
     // load base settings
@@ -622,7 +629,7 @@ abstract class sfApplicationConfiguration extends ProjectConfiguration
    * @param array|string $helpers    An array of helpers to load
    * @param string       $moduleName A module name (optional)
    */
-  public function loadHelpers($helpers, $moduleName = '')
+  public function loadHelpers($helpers, $moduleName = ''): void
   {
     foreach ((array) $helpers as $helperName)
     {

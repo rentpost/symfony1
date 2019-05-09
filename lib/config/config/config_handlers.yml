@@ -1,5 +1,5 @@
 config/autoload.yml:
-  class:    sfAutoloadConfigHandler
+  class:    Rentpost\Bridge\Symfony1\sfAutoloadConfigHandler
 
 config/databases.yml:
   class:    sfDatabaseConfigHandler
