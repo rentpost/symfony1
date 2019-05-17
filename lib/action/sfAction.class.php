@@ -138,7 +138,8 @@ abstract class sfAction extends sfComponent
 
     $this->getController()->forward($module, $action);
 
-    throw new sfStopException();
+    // This is complete and utter shit
+    // throw new sfStopException('Forwarding to another action');
   }
 
   /**
