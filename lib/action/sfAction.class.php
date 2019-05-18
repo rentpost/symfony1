@@ -205,7 +205,8 @@ abstract class sfAction extends sfComponent
 
     $this->getController()->redirect($url, 0, $statusCode);
 
-    throw new sfStopException();
+    // This is so ridiculous - just no
+    // throw new sfStopException();
   }
 
   /**
