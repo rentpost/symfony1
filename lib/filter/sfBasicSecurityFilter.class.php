@@ -81,6 +81,8 @@ class sfBasicSecurityFilter extends sfFilter
   protected function forwardToSecureAction()
   {
     $this->context->getController()->forward(sfConfig::get('sf_secure_module'), sfConfig::get('sf_secure_action'));
+
+    throw new sfStopException();
   }
 
   /**
@@ -91,6 +93,8 @@ class sfBasicSecurityFilter extends sfFilter
   protected function forwardToLoginAction()
   {
     $this->context->getController()->forward(sfConfig::get('sf_login_module'), sfConfig::get('sf_login_action'));
+
+    exit(1);
   }
 
   /**
