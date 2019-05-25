@@ -126,8 +126,6 @@ abstract class sfAction extends sfComponent
    *
    * @param  string  $module  A module name
    * @param  string  $action  An action name
-   *
-   * @throws sfStopException
    */
   public function forward($module, $action)
   {
@@ -138,8 +136,7 @@ abstract class sfAction extends sfComponent
 
     $this->getController()->forward($module, $action);
 
-    // This is complete and utter shit
-    // throw new sfStopException('Forwarding to another action');
+    return sfView::NONE;
   }
 
   /**
@@ -150,8 +147,6 @@ abstract class sfAction extends sfComponent
    * @param  bool   $condition  A condition that evaluates to true or false
    * @param  string $module     A module name
    * @param  string $action     An action name
-   *
-   * @throws sfStopException
    */
   public function forwardIf($condition, $module, $action)
   {
@@ -169,8 +164,6 @@ abstract class sfAction extends sfComponent
    * @param  bool   $condition  A condition that evaluates to true or false
    * @param  string $module     A module name
    * @param  string $action     An action name
-   *
-   * @throws sfStopException
    */
   public function forwardUnless($condition, $module, $action)
   {
@@ -191,8 +184,6 @@ abstract class sfAction extends sfComponent
    *
    * @param  string $url         Url
    * @param  int    $statusCode  Status code (default to 302)
-   *
-   * @throws sfStopException
    */
   public function redirect($url, $statusCode = 302)
   {
@@ -205,8 +196,7 @@ abstract class sfAction extends sfComponent
 
     $this->getController()->redirect($url, 0, $statusCode);
 
-    // This is so ridiculous - just no
-    // throw new sfStopException();
+    return sfView::NONE;
   }
 
   /**
@@ -217,8 +207,6 @@ abstract class sfAction extends sfComponent
    * @param  bool   $condition  A condition that evaluates to true or false
    * @param  string $url        Url
    * @param  int    $statusCode Status code (default to 302)
-   *
-   * @throws sfStopException
    *
    * @see redirect
    */
@@ -240,8 +228,6 @@ abstract class sfAction extends sfComponent
    * @param  bool   $condition  A condition that evaluates to true or false
    * @param  string $url        Url
    * @param  int    $statusCode Status code (default to 302)
-   *
-   * @throws sfStopException
    *
    * @see redirect
    */
