@@ -201,6 +201,7 @@ abstract class sfWebController extends sfController
     // For other code, only the refresh meta tag is used
     if ($statusCode == 201 || ($statusCode >= 300 && $statusCode < 400))
     {
+      header('X-RP-Redirect-Location: ' . $url);
       $response->setHttpHeader('Location', $url);
     }
 
