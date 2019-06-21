@@ -326,13 +326,13 @@ class sfWebResponse extends sfResponse
    */
   public function sendHttpHeaders()
   {
-    // Our default headers
-    header('Access-Control-Expose-Headers: Content-Disposition, Content-Type, X-RP-Redirect-Location');
-
     if (!$this->options['send_http_headers'])
     {
       return;
     }
+
+    // Our default headers
+    header('Access-Control-Expose-Headers: Content-Disposition, Content-Type, X-RP-Redirect-Location');
 
     // status
     $status = $this->options['http_protocol'].' '.$this->statusCode.' '.$this->statusText;
