@@ -331,9 +331,6 @@ class sfWebResponse extends sfResponse
       return;
     }
 
-    // Our default headers
-    header('Access-Control-Expose-Headers: Content-Disposition, Content-Type, X-RP-Redirect-Location');
-
     // status
     $status = $this->options['http_protocol'].' '.$this->statusCode.' '.$this->statusText;
     header($status);
