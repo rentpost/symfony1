@@ -580,10 +580,10 @@ class sfFinder
 
   public static function isPathAbsolute($path)
   {
-    if ($path{0} === '/' || $path{0} === '\\' ||
-        (strlen($path) > 3 && ctype_alpha($path{0}) &&
-         $path{1} === ':' &&
-         ($path{2} === '\\' || $path{2} === '/')
+    if (substr($path, 0, 1) === '/' || substr($path, 0, 1) === '\\' ||
+        (strlen($path) > 3 && ctype_alpha(substr($path, 0, 1)) &&
+        substr($path, 1, 1) === ':' &&
+         (substr($path, 2, 1) === '\\' || substr($path, 2, 1) === '/')
         )
        )
     {
