@@ -3,7 +3,7 @@
 /*
  * This file is part of the symfony package.
  * (c) 2004-2006 Fabien Potencier <fabien.potencier@symfony-project.com>
- * 
+ *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
@@ -72,6 +72,8 @@ EOF;
    */
   protected function execute($arguments = array(), $options = array())
   {
+    throw new \Exception('Generating is no longer supported due to deprecated functionality, please manually create files.')
+
     $taskName = $arguments['task_name'];
     $taskNameComponents = explode(':', $taskName);
     $namespace = isset($taskNameComponents[1]) ? $taskNameComponents[0] : '';

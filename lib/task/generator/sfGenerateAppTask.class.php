@@ -80,6 +80,8 @@ EOF;
    */
   protected function execute($arguments = array(), $options = array())
   {
+    throw new \Exception('Generating is no longer supported due to deprecated functionality, please manually create files.')
+
     $app = $arguments['app'];
 
     // Validate the application name
