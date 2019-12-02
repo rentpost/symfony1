@@ -20,8 +20,8 @@ $configuration = ProjectConfiguration::getApplicationConfiguration($app, 'test',
 sfContext::createInstance($configuration);
 
 // remove all cache
-sf_functional_test_shutdown();
-register_shutdown_function('sf_functional_test_shutdown');
+sf_doctrine_functional_test_shutdown();
+register_shutdown_function('sf_doctrine_functional_test_shutdown');
 
 $configuration->initializeDoctrine();
 if (isset($fixtures))
@@ -40,7 +40,7 @@ function sf_doctrine_functional_test_shutdown_cleanup()
   }
 }
 
-function sf_functional_test_shutdown()
+function sf_doctrine_functional_test_shutdown()
 {
   // try/catch needed due to http://bugs.php.net/bug.php?id=33598
   try
