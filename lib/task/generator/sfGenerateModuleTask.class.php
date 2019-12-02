@@ -65,7 +65,7 @@ EOF;
    */
   protected function execute($arguments = array(), $options = array())
   {
-    throw new \Exception('Generating is no longer supported due to deprecated functionality, please manually create files.')
+    throw new \Exception('Generating is no longer supported due to deprecated functionality, please manually create files.');
 
     $app    = $arguments['application'];
     $module = $arguments['module'];
