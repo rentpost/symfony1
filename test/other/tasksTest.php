@@ -120,11 +120,6 @@ mkdir($pluginDir = $c->tmp_dir.DS.'plugins'.DS.'myFooPlugin'.DS.'lib'.DS.'task',
 copy(__DIR__.'/fixtures/task/myPluginTask.class.php', $pluginDir.DS.'myPluginTask.class.php');
 file_put_contents(
   $projectConfigurationFile = $c->tmp_dir.DS.'config'.DS.'ProjectConfiguration.class.php',
-  str_replace(
-    '$this->enablePlugins(\'sfDoctrinePlugin\')',
-    '$this->enablePlugins(array(\'sfDoctrinePlugin\', \'myFooPlugin\'))',
-    file_get_contents($projectConfigurationFile)
-  )
 );
 
 $c->execute_command('p:run');
