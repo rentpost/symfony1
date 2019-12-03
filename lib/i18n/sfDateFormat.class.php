@@ -229,7 +229,7 @@ class sfDateFormat
     for ($i = 0, $max = count($tokens); $i < $max; $i++)
     {
       $pattern = $tokens[$i];
-      if ($pattern{0} == "'" && $pattern{strlen($pattern) - 1} == "'")
+      if (substr($pattern, 0, 1) == "'" && substr($pattern, strlen($pattern) - 1, 1) == "'")
       {
         $tokens[$i] = str_replace('``````', '\'', preg_replace('/(^\')|(\'$)/', '', $pattern));
       }
@@ -266,9 +266,9 @@ class sfDateFormat
    */
   protected function getFunctionName($token)
   {
-    if (isset($this->tokens[$token{0}]))
+    if (isset($this->tokens[substr($token, 0, 1)]))
     {
-      return $this->tokens[$token{0}];
+      return $this->tokens[substr($token, 0, 1)];
     }
   }
 
@@ -397,9 +397,9 @@ class sfDateFormat
 
     for ($i = 0, $max = strlen($pattern); $i < $max; $i++)
     {
-      if ($char == null || $pattern{$i} == $char || $text)
+      if ($char == null || substr($pattern, $i, 1) == $char || $text)
       {
-        $token .= $pattern{$i};
+        $token .= substr($pattern, $i, 1);
       }
       else
       {
@@ -407,20 +407,20 @@ class sfDateFormat
         $token = $pattern{$i};
       }
 
-      if ($pattern{$i} == "'" && $text == false)
+      if (substr($pattern, $i, 1) == "'" && $text == false)
       {
         $text = true;
       }
-      else if ($text && $pattern{$i} == "'" && $char == "'")
+      else if ($text && substr($pattern, $i, 1) == "'" && $char == "'")
       {
         $text = true;
       }
-      else if ($text && $char != "'" && $pattern{$i} == "'")
+      else if ($text && $char != "'" && substr($pattern, $i, 1) == "'")
       {
         $text = false;
       }
 
-      $char = $pattern{$i};
+      $char = substr($pattern, $i, 1);
 
     }
     $tokens[] = $token;

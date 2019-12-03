@@ -630,7 +630,7 @@ function _encodeText($text)
 
   for ($i = 0; $i < strlen($text); $i++)
   {
-    $char = $text{$i};
+    $char = substr($text, $i, 1);
     $r = mt_rand(0, 100);
 
     # roughly 10% raw, 45% hex, 45% dec
