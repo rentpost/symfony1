@@ -404,7 +404,7 @@ class sfDateFormat
       else
       {
         $tokens[] = str_replace("''", "'", $token);
-        $token = $pattern{$i};
+        $token = substr($pattern, $i, 1);
       }
 
       if (substr($pattern, $i, 1) == "'" && $text == false)
