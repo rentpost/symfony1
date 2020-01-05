@@ -17,7 +17,7 @@
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @version    SVN: $Id$
  */
-class sfError404Exception extends sfException implements \Rentpost\Cog\Exception\HttpAwareExceptionInterface, \Rentpost\Cog\Exception\FriendlyExceptionInterface
+class sfError404Exception extends sfException implements \Rentpost\Cog\Exception\HttpAwareExceptionInterface, \Rentpost\Cog\Exception\ClientAwareInterface
 {
   /**
    * Forwards to the 404 action.
@@ -47,7 +47,7 @@ class sfError404Exception extends sfException implements \Rentpost\Cog\Exception
   }
 
 
-  public function getFriendlyMessage(): string
+  public function getClientMessage(): string
   {
     return 'Resource not found';
   }
