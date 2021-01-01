@@ -17,7 +17,7 @@
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @version    SVN: $Id$
  */
-class sfError404Exception extends sfException implements \Rentpost\Cog\Exception\HttpAwareExceptionInterface, \Rentpost\Cog\Exception\ClientAwareInterface
+class sfError404Exception extends sfException implements \Rentpost\Exception\HttpAwareExceptionInterface, \Rentpost\Exception\ClientAwareInterface
 {
   /**
    * Forwards to the 404 action.
