@@ -130,7 +130,7 @@ class sfProjectConfiguration
       'sf_root_dir' => $rootDir,
 
       // global directory structure
-      'sf_apps_dir'    => $rootDir.DIRECTORY_SEPARATOR.'apps',
+      'sf_apps_dir'    => $rootDir.DIRECTORY_SEPARATOR.'portals',
       'sf_lib_dir'     => $rootDir.DIRECTORY_SEPARATOR.'lib',
       'sf_log_dir'     => $rootDir.DIRECTORY_SEPARATOR.'log',
       'sf_data_dir'    => $rootDir.DIRECTORY_SEPARATOR.'data',
@@ -612,7 +612,7 @@ class sfProjectConfiguration
       $rootDir = static::guessRootDir();
     }
 
-    if (!is_file($file = $rootDir.'/apps/'.$application.'/config/'.$class.'.class.php'))
+    if (!is_file($file = $rootDir.'/portals/'.$application.'/config/'.$class.'.class.php'))
     {
       throw new InvalidArgumentException(sprintf('The application "%s" does not exist.', $application));
     }
