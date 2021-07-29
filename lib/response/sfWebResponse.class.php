@@ -201,7 +201,9 @@ class sfWebResponse extends sfResponse
   public function setStatusCode($code, $name = null)
   {
     $this->statusCode = $code;
-    $this->statusText = null !== $name ? $name : self::$statusTexts[$code];
+    $this->statusText = null !== $name
+      ? $name
+      : self::$statusTexts[$code] ?? 500;
   }
 
   /**
