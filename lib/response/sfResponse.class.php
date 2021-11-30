@@ -39,6 +39,16 @@ abstract class sfResponse implements Serializable
     $this->initialize($dispatcher, $options);
   }
 
+  public function __serialize(): array
+  {
+    return [$this->serialize()];
+  }
+
+  public function __unserialize(array $data): void
+  {
+    $this->unserialize($data[0]);
+  }
+
   /**
    * Initializes this sfResponse.
    *
@@ -151,10 +161,8 @@ abstract class sfResponse implements Serializable
 
   /**
    * Serializes the current instance.
-   *
-   * @return array Objects instance
    */
-  public function serialize()
+  public function serialize(): ?string
   {
     return serialize($this->content);
   }
@@ -165,9 +173,8 @@ abstract class sfResponse implements Serializable
    * You need to inject a dispatcher after unserializing a sfResponse instance.
    *
    * @param string $serialized  A serialized sfResponse instance
-   *
    */
-  public function unserialize($serialized)
+  public function unserialize($serialized): void
   {
     $this->content = unserialize($serialized);
   }

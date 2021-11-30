@@ -4,7 +4,7 @@
  * This file is part of the symfony package.
  * (c) 2004-2006 Fabien Potencier <fabien.potencier@symfony-project.com>
  * (c) 2004-2006 Sean Kerr <sean@code-box.org>
- * 
+ *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
@@ -30,6 +30,16 @@ class sfParameterHolder implements Serializable
    */
   public function __construct()
   {
+  }
+
+  public function __serialize(): array
+  {
+    return [$this->serialize()];
+  }
+
+  public function __unserialize(array $data): void
+  {
+    $this->unserialize($data[0]);
   }
 
   /**
@@ -180,10 +190,8 @@ class sfParameterHolder implements Serializable
 
   /**
    * Serializes the current instance.
-   *
-   * @return array Objects instance
    */
-  public function serialize()
+  public function serialize(): ?string
   {
     return serialize($this->parameters);
   }
@@ -193,7 +201,7 @@ class sfParameterHolder implements Serializable
    *
    * @param string $serialized  A serialized sfParameterHolder instance
    */
-  public function unserialize($serialized)
+  public function unserialize($serialized): void
   {
     $this->parameters = unserialize($serialized);
   }
