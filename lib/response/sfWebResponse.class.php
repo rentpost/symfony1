@@ -877,7 +877,7 @@ class sfWebResponse extends sfResponse
   /**
    * @see sfResponse
    */
-  public function serialize()
+  public function serialize(): ?string
   {
     return serialize(array($this->content, $this->statusCode, $this->statusText, $this->options, $this->headerOnly, $this->headers, $this->metas, $this->httpMetas, $this->stylesheets, $this->javascripts, $this->slots));
   }
@@ -886,7 +886,7 @@ class sfWebResponse extends sfResponse
    * @see sfResponse
    * @inheritdoc
    */
-  public function unserialize($serialized)
+  public function unserialize($serialized): void
   {
     list($this->content, $this->statusCode, $this->statusText, $this->options, $this->headerOnly, $this->headers, $this->metas, $this->httpMetas, $this->stylesheets, $this->javascripts, $this->slots) = unserialize($serialized);
   }
