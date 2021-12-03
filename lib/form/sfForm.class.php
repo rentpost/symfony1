@@ -1269,7 +1269,7 @@ class sfForm implements ArrayAccess, Iterator, Countable
    *
    * @return boolean The validity of the current element; true if it is valid
    */
-  public function valid(): void
+  public function valid(): bool
   {
     return $this->count > 0;
   }
