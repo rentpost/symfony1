@@ -3,7 +3,7 @@
 /*
  * This file is part of the symfony package.
  * (c) Fabien Potencier <fabien.potencier@symfony-project.com>
- * 
+ *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
@@ -164,10 +164,8 @@ class sfViewParameterHolder extends sfParameterHolder
 
   /**
    * Serializes the current instance.
-   *
-   * @return array Objects instance
    */
-  public function serialize()
+  public function serialize(): ?string
   {
     return serialize(array($this->getAll(), $this->escapingMethod, $this->escaping));
   }
@@ -177,7 +175,7 @@ class sfViewParameterHolder extends sfParameterHolder
    *
    * @param string $serialized The serialized instance data
    */
-  public function unserialize($serialized)
+  public function unserialize($serialized): void
   {
     list($this->parameters, $escapingMethod, $escaping) = unserialize($serialized);
 
