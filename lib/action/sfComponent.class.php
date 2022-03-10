@@ -280,11 +280,11 @@ abstract class sfComponent
    *
    * <code>$this->getContext()->getUser()</code>
    *
-   * @see /srv/www/src/Rentpost/Bridge/Symfony1/myUser-other.class.php
+   * @see /srv/www/src/Rentpost/Bridge/Symfony1/PortalUser.php
    *
    * @return sfUser The current sfUser implementation instance
    */
-  public function getUser(): myUser
+  public function getUser(): \PortalUser
   {
     return $this->context->getUser();
   }
