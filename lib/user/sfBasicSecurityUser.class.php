@@ -236,12 +236,12 @@ class sfBasicSecurityUser extends sfUser implements sfSecurityUser
    *             Set to false to disable
    *
    * @param sfEventDispatcher $dispatcher  An sfEventDispatcher instance.
-   * @param \Rentpost\Cog\SessionStorageLegacy         $storage     An \Rentpost\Cog\SessionStorageLegacy instance.
+   * @param \Rentpost\Bridge\Symfony1\SessionStorageLegacy         $storage     An \Rentpost\Bridge\Symfony1\SessionStorageLegacy instance.
    * @param array             $options     An associative array of options.
    *
    * @see sfUser
    */
-  public function initialize(sfEventDispatcher $dispatcher, \Rentpost\Cog\SessionStorageLegacy $storage, $options = array())
+  public function initialize(sfEventDispatcher $dispatcher, \Rentpost\Bridge\Symfony1\SessionStorageLegacy $storage, $options = array())
   {
     // initialize parent
     parent::initialize($dispatcher, $storage, $options);
@@ -256,7 +256,7 @@ class sfBasicSecurityUser extends sfUser implements sfSecurityUser
     {
       ini_set('session.gc_maxlifetime', $this->options['timeout']);
     }
-    
+
     // read data from storage
     $this->authenticated = $storage->read(self::AUTH_NAMESPACE);
     $this->credentials   = $storage->read(self::CREDENTIAL_NAMESPACE);
