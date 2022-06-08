@@ -130,7 +130,7 @@ class sfProjectConfiguration
       'sf_root_dir' => $rootDir,
 
       // global directory structure
-      'sf_apps_dir'    => $rootDir.DIRECTORY_SEPARATOR.'portals',
+      'sf_apps_dir'    => $rootDir.DIRECTORY_SEPARATOR.'portal',
       'sf_lib_dir'     => $rootDir.DIRECTORY_SEPARATOR.'lib',
       'sf_log_dir'     => $rootDir.DIRECTORY_SEPARATOR.'log',
       'sf_data_dir'    => $rootDir.DIRECTORY_SEPARATOR.'data',
