@@ -612,7 +612,7 @@ class sfProjectConfiguration
       $rootDir = static::guessRootDir();
     }
 
-    if (!is_file($file = $rootDir.'/portals/'.$application.'/config/'.$class.'.class.php'))
+    if (!is_file($file = $rootDir.'/portal/'.$application.'/config/'.$class.'.class.php'))
     {
       throw new InvalidArgumentException(sprintf('The application "%s" does not exist.', $application));
     }
