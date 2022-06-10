@@ -614,7 +614,11 @@ class sfProjectConfiguration
 
     if (!is_file($file = $rootDir.'/portal/'.$application.'/config/'.$class.'.class.php'))
     {
-      throw new InvalidArgumentException(sprintf('The application "%s" does not exist.', $application));
+      throw new InvalidArgumentException(sprintf(
+        'The application "%s" does not exist.  Cannot locate config file: "%s"',
+        $application,
+        $file,
+      ));
     }
 
     require_once $file;
