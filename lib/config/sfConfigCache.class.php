@@ -335,6 +335,11 @@ class sfConfigCache
   {
     $current_umask = umask(0000);
     $cacheDir      = dirname($cache);
+
+    // Seems like there may be a situation where we're getting a file written instead of a dir at
+    // /tmp/cache/mypost/dev/config.  We might consider checking if it's a file, removing it and then
+    // continuing on.
+
     if (!is_dir($cacheDir) && !@mkdir($cacheDir, 0777, true) && !is_dir($cacheDir))
     {
         throw new \sfCacheException(sprintf('Failed to make cache directory "%s" while generating cache for configuration file "%s".', $cacheDir, $config));
