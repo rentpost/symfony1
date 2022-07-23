@@ -337,8 +337,12 @@ class sfConfigCache
     $cacheDir      = dirname($cache);
 
     // Seems like there may be a situation where we're getting a file written instead of a dir at
-    // /tmp/cache/mypost/dev/config.  We might consider checking if it's a file, removing it and then
-    // continuing on.
+    // /tmp/cache/mypost/dev/config.  Checking if it's a file, removing it and then continuing on.
+    if (file_exists($cacheDir) && !is_dir($cacheDir))
+    {
+        unlink($cacheDir);
+    }
+
 
     if (!is_dir($cacheDir) && !@mkdir($cacheDir, 0777, true) && !is_dir($cacheDir))
     {
