@@ -344,9 +344,13 @@ class sfConfigCache
     }
 
 
-    if (!is_dir($cacheDir) && !@mkdir($cacheDir, 0777, true) && !is_dir($cacheDir))
-    {
-        throw new \sfCacheException(sprintf('Failed to make cache directory "%s" while generating cache for configuration file "%s".', $cacheDir, $config));
+    try {
+      if (!is_dir($cacheDir) && !@mkdir($cacheDir, 0777, true) && !is_dir($cacheDir))
+      {
+          throw new \sfCacheException(sprintf('Failed to make cache directory "%s" while generating cache for configuration file "%s".', $cacheDir, $config));
+      }
+    } catch (\Throwable $e) {
+        throw new \sfCacheException(sprintf('Failed to make cache directory "%s" while generating cache for configuration file "%s".', $cacheDir, $config), 0, $e);
     }
 
     $tmpFile = tempnam($cacheDir, basename($cache));
