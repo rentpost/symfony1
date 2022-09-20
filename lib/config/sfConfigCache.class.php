@@ -338,6 +338,8 @@ class sfConfigCache
 
     // Seems like there may be a situation where we're getting a file written instead of a dir at
     // /tmp/cache/mypost/dev/config.  Checking if it's a file, removing it and then continuing on.
+    // Getting error that we cannot unlink a dir.  Even with this check in place.  And, permissions
+    // are correct as well.  I have no idea what's going on here.
     if (!is_dir($cacheDir))
     {
         if (file_exists($cacheDir)) {
