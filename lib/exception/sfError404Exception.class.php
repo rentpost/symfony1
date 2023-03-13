@@ -1,5 +1,8 @@
 <?php
 
+use Rentpost\Exception\HttpAwareExceptionInterface;
+use Rentpost\Exception\ClientAwareInterface;
+
 /*
  * This file is part of the symfony package.
  * (c) 2004-2006 Fabien Potencier <fabien.potencier@symfony-project.com>
@@ -17,7 +20,7 @@
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @version    SVN: $Id$
  */
-class sfError404Exception extends sfException implements \Rentpost\Exception\HttpAwareExceptionInterface, \Rentpost\Exception\ClientAwareInterface
+class sfError404Exception extends sfException implements HttpAwareExceptionInterface, ClientAwareInterface
 {
   /**
    * Forwards to the 404 action.
@@ -56,5 +59,11 @@ class sfError404Exception extends sfException implements \Rentpost\Exception\Htt
   public function getStatusCode(): int
   {
     return 404;
+  }
+
+
+  public function getProblemFields(): array
+  {
+    return [];
   }
 }
