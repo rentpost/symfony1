@@ -1,5 +1,7 @@
 <?php
 
+use Rentpost\Bridge\Symfony1\PortalUser;
+
 /*
  * This file is part of the symfony package.
  * (c) 2004-2006 Fabien Potencier <fabien.potencier@symfony-project.com>
@@ -284,7 +286,7 @@ abstract class sfComponent
    *
    * @return sfUser The current sfUser implementation instance
    */
-  public function getUser(): \PortalUser
+  public function getUser(): PortalUser
   {
     return $this->context->getUser();
   }
