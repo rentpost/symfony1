@@ -11,106 +11,108 @@
 /**
  * sfValidatorError represents a validation error.
  *
- * @package    symfony
- * @subpackage validator
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
+ *
  * @version    SVN: $Id$
  */
 class sfValidatorError extends Exception implements Serializable
 {
-  protected
-    $validator = null,
-    $arguments = array();
+    protected $validator;
+    protected $arguments = array();
 
-  /**
-   * Constructor.
-   *
-   * @param sfValidatorBase $validator  An sfValidatorBase instance
-   * @param string          $code       The error code
-   * @param array           $arguments  An array of named arguments needed to render the error message
-   */
-  public function __construct(sfValidatorBase $validator, $code, $arguments = array())
-  {
-    $this->validator = $validator;
-    $this->arguments = $arguments;
-
-    // override default exception message and code
-    $this->code = $code;
-
-    if (!$messageFormat = $this->getMessageFormat())
+    /**
+     * Constructor.
+     *
+     * @param sfValidatorBase $validator An sfValidatorBase instance
+     * @param string          $code      The error code
+     * @param array           $arguments An array of named arguments needed to render the error message
+     */
+    public function __construct(sfValidatorBase $validator, $code, $arguments = array())
     {
-      $messageFormat = $code;
-    }
-    $this->message = strtr($messageFormat, $this->getArguments());
-  }
+        $this->validator = $validator;
+        $this->arguments = $arguments;
 
-  /**
-   * Returns the string representation of the error.
-   *
-   * @return string The error message
-   */
-  public function __toString()
-  {
-    return $this->getMessage();
-  }
+        // override default exception message and code
+        $this->code = $code;
 
-  public function __serialize(): array
-  {
-    return [$this->serialize()];
-  }
-
-  public function __unserialize(array $data): void
-  {
-    $this->unserialize($data[0]);
-  }
-
-  /**
-   * Returns the input value that triggered this error.
-   *
-   * @return mixed The input value
-   */
-  public function getValue()
-  {
-    return isset($this->arguments['value']) ? $this->arguments['value'] : null;
-  }
-
-  /**
-   * Returns the validator that triggered this error.
-   *
-   * @return sfValidatorBase A sfValidatorBase instance
-   */
-  public function getValidator()
-  {
-    return $this->validator;
-  }
-
-  /**
-   * Returns the arguments needed to format the message.
-   *
-   * @param bool $raw  false to use it as arguments for the message format, true otherwise (default to false)
-   *
-   * @see getMessageFormat()
-   */
-  public function getArguments($raw = false)
-  {
-    if ($raw)
-    {
-      return $this->arguments;
+        if (!$messageFormat = $this->getMessageFormat()) {
+            $messageFormat = $code;
+        }
+        $this->message = strtr($messageFormat, $this->getArguments());
     }
 
-    $arguments = array();
-    foreach ($this->arguments as $key => $value)
+    /**
+     * Returns the string representation of the error.
+     *
+     * @return string The error message
+     */
+    public function __toString()
     {
-      if (is_array($value))
-      {
-        continue;
-      }
-
-      $arguments["%$key%"] = htmlspecialchars($value, ENT_QUOTES, sfValidatorBase::getCharset());
+        return $this->getMessage();
     }
 
-    return $arguments;
-  }
+    /**
+     * Serializes the current instance for php 7.4+.
+     *
+     * @return array
+     */
+    public function __serialize()
+    {
+        return array($this->validator, $this->arguments, $this->code, $this->message);
+    }
+
+    /**
+     * Unserializes a sfValidatorError instance for php 7.4+.
+     */
+    public function __unserialize($data)
+    {
+        list($this->validator, $this->arguments, $this->code, $this->message) = $data;
+    }
+
+    /**
+     * Returns the input value that triggered this error.
+     *
+     * @return mixed The input value
+     */
+    public function getValue()
+    {
+        return isset($this->arguments['value']) ? $this->arguments['value'] : null;
+    }
+
+    /**
+     * Returns the validator that triggered this error.
+     *
+     * @return sfValidatorBase A sfValidatorBase instance
+     */
+    public function getValidator()
+    {
+        return $this->validator;
+    }
+
+    /**
+     * Returns the arguments needed to format the message.
+     *
+     * @param bool $raw false to use it as arguments for the message format, true otherwise (default to false)
+     *
+     * @see getMessageFormat()
+     */
+    public function getArguments($raw = false)
+    {
+        if ($raw) {
+            return $this->arguments;
+        }
+
+        $arguments = array();
+        foreach ($this->arguments as $key => $value) {
+            if (is_array($value)) {
+                continue;
+            }
+
+            $arguments["%{$key}%"] = htmlspecialchars($value, ENT_QUOTES, sfValidatorBase::getCharset());
+        }
+
+        return $arguments;
+    }
 
   /**
    * Returns the message format for this error.
@@ -132,35 +134,55 @@ class sfValidatorError extends Exception implements Serializable
     {
       $messageFormat = $this->getMessage();
     }
+    /**
+     * Returns the message format for this error.
+     *
+     * This is the string you need to use if you need to internationalize
+     * error messages:
+     *
+     * $i18n->__($error->getMessageFormat(), $error->getArguments());
+     *
+     * If no message format has been set in the validator, the exception standard
+     * message is returned.
+     *
+     * @return string The message format
+     */
+    public function getMessageFormat()
+    {
+        $messageFormat = $this->validator->getMessage($this->code);
+        if (!$messageFormat) {
+            $messageFormat = $this->getMessage();
+        }
 
-    return $messageFormat;
-  }
+        return $messageFormat;
+    }
 
-  /**
-   * Serializes the current instance.
-   *
-   * We must implement the Serializable interface to overcome a problem with PDO
-   * used as a session handler.
-   *
-   * The default serialization process serializes the exception trace, and because
-   * the trace can contain a PDO instance which is not serializable, serializing won't
-   * work when using PDO.
-   *
-   * @return string The instance as a serialized string
-   */
-  public function serialize(): ?string
-  {
-    return serialize([$this->validator, $this->arguments, $this->code, $this->message]);
-  }
+    /**
+     * Serializes the current instance.
+     *
+     * We must implement the Serializable interface to overcome a problem with PDO
+     * used as a session handler.
+     *
+     * The default serialization process serializes the exception trace, and because
+     * the trace can contain a PDO instance which is not serializable, serializing won't
+     * work when using PDO.
+     *
+     * @return string The instance as a serialized string
+     */
+    public function serialize()
+    {
+        return serialize($this->__serialize());
+    }
 
-  /**
-   * Unserializes a sfValidatorError instance.
-   *
-   * @param string $serialized  A serialized sfValidatorError instance
-   *
-   */
-  public function unserialize($serialized): void
-  {
-    [$this->validator, $this->arguments, $this->code, $this->message] = unserialize($serialized);
-  }
+    /**
+     * Unserializes a sfValidatorError instance.
+     *
+     * @param string $serialized A serialized sfValidatorError instance
+     */
+    public function unserialize($serialized)
+    {
+        $array = unserialize($serialized);
+
+        $this->__unserialize($array);
+    }
 }

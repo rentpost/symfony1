@@ -11,155 +11,130 @@
 /**
  * A View to render partials.
  *
- * @package    symfony
- * @subpackage view
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
+ *
  * @version    SVN: $Id$
  */
 class sfPartialView extends sfPHPView
 {
-  protected
-    $viewCache   = null,
-    $checkCache  = false,
-    $cacheKey    = null,
-    $partialVars = array();
+    protected $viewCache;
+    protected $checkCache = false;
+    protected $cacheKey;
+    protected $partialVars = array();
 
-  /**
-   * Constructor.
-   * 
-   * @see sfView
-   */
-  public function initialize($context, $moduleName, $actionName, $viewName)
-  {
-    $ret = parent::initialize($context, $moduleName, $actionName, $viewName);
-
-    $this->viewCache = $this->context->getViewCacheManager();
-
-    if (sfConfig::get('sf_cache'))
+    /**
+     * Constructor.
+     *
+     * @see sfView
+     */
+    public function initialize($context, $moduleName, $actionName, $viewName)
     {
-      $this->checkCache = $this->viewCache->isActionCacheable($moduleName, $actionName);
+        $ret = parent::initialize($context, $moduleName, $actionName, $viewName);
+
+        $this->viewCache = $this->context->getViewCacheManager();
+
+        if (sfConfig::get('sf_cache')) {
+            $this->checkCache = $this->viewCache->isActionCacheable($moduleName, $actionName);
+        }
+
+        return $ret;
     }
 
-    return $ret;
-  }
+    /**
+     * Executes any presentation logic for this view.
+     */
+    public function execute() {}
 
-  /**
-   * Executes any presentation logic for this view.
-   */
-  public function execute()
-  {
-  }
-
-  /**
-   * @param array $partialVars
-   */
-  public function setPartialVars(array $partialVars)
-  {
-    $this->partialVars = $partialVars;
-    $this->getAttributeHolder()->add($partialVars);
-  }
-
-  /**
-   * Configures template for this view.
-   */
-  public function configure()
-  {
-    $this->setDecorator(false);
-    $this->setTemplate($this->actionName.$this->getExtension());
-    if ('global' == $this->moduleName)
+    public function setPartialVars(array $partialVars)
     {
-      $this->setDirectory($this->context->getConfiguration()->getDecoratorDir($this->getTemplate()));
-    }
-    else
-    {
-      $this->setDirectory($this->context->getConfiguration()->getTemplateDir($this->moduleName, $this->getTemplate()));
-    }
-  }
-
-  /**
-   * Renders the presentation.
-   *
-   * @return string Current template content
-   */
-  public function render()
-  {
-    if (sfConfig::get('sf_debug') && sfConfig::get('sf_logging_enabled'))
-    {
-      $timer = sfTimerManager::getTimer(sprintf('Partial "%s/%s"', $this->moduleName, $this->actionName));
+        $this->partialVars = $partialVars;
+        $this->getAttributeHolder()->add($partialVars);
     }
 
-    if ($retval = $this->getCache())
+    /**
+     * Configures template for this view.
+     */
+    public function configure()
     {
-      return $retval;
+        $this->setDecorator(false);
+        $this->setTemplate($this->actionName.$this->getExtension());
+        if ('global' == $this->moduleName) {
+            $this->setDirectory($this->context->getConfiguration()->getDecoratorDir($this->getTemplate()));
+        } else {
+            $this->setDirectory($this->context->getConfiguration()->getTemplateDir($this->moduleName, $this->getTemplate()));
+        }
     }
 
-    if ($this->checkCache)
+    /**
+     * Renders the presentation.
+     *
+     * @return string Current template content
+     */
+    public function render()
     {
-      $mainResponse = $this->context->getResponse();
+        if (sfConfig::get('sf_debug') && sfConfig::get('sf_logging_enabled')) {
+            $timer = sfTimerManager::getTimer(sprintf('Partial "%s/%s"', $this->moduleName, $this->actionName));
+        }
 
-      $responseClass = get_class($mainResponse);
-      $response = new $responseClass($this->context->getEventDispatcher(), $mainResponse->getOptions());
+        if ($retval = $this->getCache()) {
+            return $retval;
+        }
 
-      // the inner response has access to different properties, depending on whether it is marked as contextual in cache.yml
-      if ($this->viewCache->isContextual($this->viewCache->getPartialUri($this->moduleName, $this->actionName, $this->cacheKey)))
-      {
-        $response->copyProperties($mainResponse);
-      }
-      else
-      {
-        $response->setContentType($mainResponse->getContentType());
-      }
+        if ($this->checkCache) {
+            $mainResponse = $this->context->getResponse();
 
-      $this->context->setResponse($response);
+            $responseClass = get_class($mainResponse);
+            $response = new $responseClass($this->context->getEventDispatcher(), $mainResponse->getOptions());
+
+            // the inner response has access to different properties, depending on whether it is marked as contextual in cache.yml
+            if ($this->viewCache->isContextual($this->viewCache->getPartialUri($this->moduleName, $this->actionName, $this->cacheKey))) {
+                $response->copyProperties($mainResponse);
+            } else {
+                $response->setContentType($mainResponse->getContentType());
+            }
+
+            $this->context->setResponse($response);
+        }
+
+        try {
+            // execute pre-render check
+            $this->preRenderCheck();
+
+            $this->getAttributeHolder()->set('sf_type', 'partial');
+
+            // render template
+            $retval = $this->renderFile($this->getDirectory().'/'.$this->getTemplate());
+        } catch (Exception $e) {
+            if ($this->checkCache) {
+                $this->context->setResponse($mainResponse);
+                $mainResponse->merge($response);
+            }
+
+            throw $e;
+        }
+
+        if ($this->checkCache) {
+            $retval = $this->viewCache->setPartialCache($this->moduleName, $this->actionName, $this->cacheKey, $retval);
+            $this->context->setResponse($mainResponse);
+            $mainResponse->merge($response);
+        }
+
+        if (sfConfig::get('sf_debug') && sfConfig::get('sf_logging_enabled')) {
+            $timer->addTime();
+        }
+
+        return $retval;
     }
 
-    try
+    public function getCache()
     {
-      // execute pre-render check
-      $this->preRenderCheck();
+        if (!$this->checkCache) {
+            return null;
+        }
 
-      $this->getAttributeHolder()->set('sf_type', 'partial');
-
-      // render template
-      $retval = $this->renderFile($this->getDirectory().'/'.$this->getTemplate());
+        $this->cacheKey = $this->viewCache->checkCacheKey($this->partialVars);
+        if ($retval = $this->viewCache->getPartialCache($this->moduleName, $this->actionName, $this->cacheKey)) {
+            return $retval;
+        }
     }
-    catch (Exception $e)
-    {
-      if ($this->checkCache)
-      {
-        $this->context->setResponse($mainResponse);
-        $mainResponse->merge($response);
-      }
-
-      throw $e;
-    }
-
-    if ($this->checkCache)
-    {
-      $retval = $this->viewCache->setPartialCache($this->moduleName, $this->actionName, $this->cacheKey, $retval);
-      $this->context->setResponse($mainResponse);
-      $mainResponse->merge($response);
-    }
-
-    if (sfConfig::get('sf_debug') && sfConfig::get('sf_logging_enabled'))
-    {
-      $timer->addTime();
-    }
-
-    return $retval;
-  }
-
-  public function getCache()
-  {
-    if (!$this->checkCache)
-    {
-      return null;
-    }
-
-    $this->cacheKey = $this->viewCache->checkCacheKey($this->partialVars);
-    if ($retval = $this->viewCache->getPartialCache($this->moduleName, $this->actionName, $this->cacheKey))
-    {
-      return $retval;
-    }
-  }
 }

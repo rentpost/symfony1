@@ -1,6 +1,45 @@
 CHANGELOG
 =========
 
+=======
+xx/xx/xxxx: Version 1.5.16
+--------------------------
+
+
+12/01/2023: Version 1.5.15
+--------------------------
+
+* Add support for PHP 8.2 by @thirsch in #274
+* More adjustments for PHP 8.0 & 8.1 by @thirsch in #272
+
+25/11/2022: Version 1.5.14
+--------------------------
+
+* Update composer.json to automatically remove lexpress/symfony1 package by @spirit-q2 in #241
+* Updated lexpress to fos1 in the submodules. by @thirsch in #238
+* Compat for Swiftmailer 6 but preserve compatibility with Swiftmailer 5. by @thirsch in #240
+* Update PHPDoc for `sfWebController::redirect()` func by @cmdeviant in #246
+* Fixing Issue #234 by @pathumhdes in #235
+* Add consistent local environment for testing with docker and docker-compose by @alquerci in #262
+* Use GitHub actions for Continuous Integration tests by @thePanz in #268
+* Add support for PHP 8.0 & 8.1 by @Tybaze in #266
+
+08/06/2020: Version 1.5.13
+--------------------------
+
+* Fix for `Warning: ini_set(): A session is active...` #229
+* Php 7.4 Incompatibility Fixes #228
+* Remove notice appeared on php 7.4 #230
+* Rename package to `friendsofsymfony1/symfony1` #231
+
+03/04/2020: Version 1.5.12
+--------------------------
+
+* Move project from @LExpress to @FriendsOfSymfony1
+* Some doc & readme update
+* Fixes for PHP 7.3 & 7.4 (thanks @W0rma for the code and @alquerci for the review) #224
+* Backport fix for cve-2019-18888 by @adrienperonnet #218
+
 17/03/2018: Version 1.5.11
 --------------------------
 

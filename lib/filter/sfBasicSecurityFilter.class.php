@@ -15,95 +15,92 @@
  * verifies the user has the same credential by calling the hasCredential()
  * method of SecurityUser.
  *
- * @package    symfony
- * @subpackage filter
  * @author     Sean Kerr <sean@code-box.org>
+ *
  * @version    SVN: $Id$
  */
 class sfBasicSecurityFilter extends sfFilter
 {
-  /**
-   * Executes this filter.
-   *
-   * @param sfFilterChain $filterChain A sfFilterChain instance
-   */
-  public function execute($filterChain)
-  {
-    // disable security on login and secure actions
-    if (
-      (sfConfig::get('sf_login_module') == $this->context->getModuleName()) && (sfConfig::get('sf_login_action') == $this->context->getActionName())
-      ||
-      (sfConfig::get('sf_secure_module') == $this->context->getModuleName()) && (sfConfig::get('sf_secure_action') == $this->context->getActionName())
-    )
+    /**
+     * Executes this filter.
+     *
+     * @param sfFilterChain $filterChain A sfFilterChain instance
+     */
+    public function execute($filterChain)
     {
-      $filterChain->execute();
+        // disable security on login and secure actions
+        if (
+            (sfConfig::get('sf_login_module') == $this->context->getModuleName()) && (sfConfig::get('sf_login_action') == $this->context->getActionName())
+            || (sfConfig::get('sf_secure_module') == $this->context->getModuleName()) && (sfConfig::get('sf_secure_action') == $this->context->getActionName())
+        ) {
+            $filterChain->execute();
 
-      return;
+            return;
+        }
+
+        // NOTE: the nice thing about the Action class is that getCredential()
+        //       is vague enough to describe any level of security and can be
+        //       used to retrieve such data and should never have to be altered
+        if (!$this->context->getUser()->isAuthenticated()) {
+            if (sfConfig::get('sf_logging_enabled')) {
+                $this->context->getEventDispatcher()->notify(new sfEvent($this, 'application.log', array(sprintf('Action "%s/%s" requires authentication, forwarding to "%s/%s"', $this->context->getModuleName(), $this->context->getActionName(), sfConfig::get('sf_login_module'), sfConfig::get('sf_login_action')))));
+            }
+
+            // the user is not authenticated
+            http_response_code(401);
+            $this->forwardToLoginAction();
+        }
+
+        // the user is authenticated
+        $credential = $this->getUserCredential();
+        if (null !== $credential && !$this->context->getUser()->hasCredential($credential)) {
+            if (sfConfig::get('sf_logging_enabled')) {
+                $this->context->getEventDispatcher()->notify(new sfEvent($this, 'application.log', array(sprintf('Action "%s/%s" requires credentials "%s", forwarding to "%s/%s"', $this->context->getModuleName(), $this->context->getActionName(), sfYaml::dump($credential, 0), sfConfig::get('sf_secure_module'), sfConfig::get('sf_secure_action')))));
+            }
+
+            // the user doesn't have access
+            $this->forwardToSecureAction();
+        }
+
+        // the user has access, continue
+        $filterChain->execute();
     }
 
-    // NOTE: the nice thing about the Action class is that getCredential()
-    //       is vague enough to describe any level of security and can be
-    //       used to retrieve such data and should never have to be altered
-    if (!$this->context->getUser()->isAuthenticated())
+    /**
+     * Forwards the current request to the secure action.
+     *
+     * @internal this used to throw an sfStopException
+     *
+     * @throws sfStopException
+     */
+    protected function forwardToSecureAction()
     {
-      if (sfConfig::get('sf_logging_enabled'))
-      {
-        $this->context->getEventDispatcher()->notify(new sfEvent($this, 'application.log', array(sprintf('Action "%s/%s" requires authentication, forwarding to "%s/%s"', $this->context->getModuleName(), $this->context->getActionName(), sfConfig::get('sf_login_module'), sfConfig::get('sf_login_action')))));
-      }
+        $this->context->getController()->forward(sfConfig::get('sf_secure_module'), sfConfig::get('sf_secure_action'));
 
-      // the user is not authenticated
-      http_response_code(401);
-      $this->forwardToLoginAction();
+        exit(0);
     }
 
-    // the user is authenticated
-    $credential = $this->getUserCredential();
-    if (null !== $credential && !$this->context->getUser()->hasCredential($credential))
+    /**
+     * Forwards the current request to the login action.
+     *
+     * @internal this used to throw an sfStopException
+     *
+     * @throws sfStopException
+     */
+    protected function forwardToLoginAction()
     {
-      if (sfConfig::get('sf_logging_enabled'))
-      {
-        $this->context->getEventDispatcher()->notify(new sfEvent($this, 'application.log', array(sprintf('Action "%s/%s" requires credentials "%s", forwarding to "%s/%s"', $this->context->getModuleName(), $this->context->getActionName(), sfYaml::dump($credential, 0), sfConfig::get('sf_secure_module'), sfConfig::get('sf_secure_action')))));
-      }
+        $this->context->getController()->forward(sfConfig::get('sf_login_module'), sfConfig::get('sf_login_action'));
 
-      // the user doesn't have access
-      $this->forwardToSecureAction();
+        exit(0);
     }
 
-    // the user has access, continue
-    $filterChain->execute();
-  }
-
-  /**
-   * Forwards the current request to the secure action.
-   *
-   * @note this used to throw an sfStopException
-   */
-  protected function forwardToSecureAction()
-  {
-    $this->context->getController()->forward(sfConfig::get('sf_secure_module'), sfConfig::get('sf_secure_action'));
-
-    exit(0);
-  }
-
-  /**
-   * Forwards the current request to the login action.
-   *
-   * @note this used to throw an sfStopException
-   */
-  protected function forwardToLoginAction()
-  {
-    $this->context->getController()->forward(sfConfig::get('sf_login_module'), sfConfig::get('sf_login_action'));
-
-    exit(0);
-  }
-
-  /**
-   * Returns the credential required for this action.
-   *
-   * @return mixed The credential required for this action
-   */
-  protected function getUserCredential()
-  {
-    return $this->context->getController()->getActionStack()->getLastEntry()->getActionInstance()->getCredential();
-  }
+    /**
+     * Returns the credential required for this action.
+     *
+     * @return mixed The credential required for this action
+     */
+    protected function getUserCredential()
+    {
+        return $this->context->getController()->getActionStack()->getLastEntry()->getActionInstance()->getCredential();
+    }
 }
