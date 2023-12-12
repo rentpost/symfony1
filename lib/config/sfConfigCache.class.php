@@ -312,29 +312,32 @@ class sfConfigCache
    */
   protected function writeCacheFile($config, $cache, $data)
   {
-    $current_umask = umask(0000);
-    $cacheDir      = dirname($cache);
+        $current_umask = umask(0000);
+        $cacheDir      = dirname($cache);
 
-    // Seems like there may be a situation where we're getting a file written instead of a dir at
-    // /tmp/cache/mypost/dev/config.  Checking if it's a file, removing it and then continuing on.
-    // Getting error that we cannot unlink a dir.  Even with this check in place.  And, permissions
-    // are correct as well.  I have no idea what's going on here.
-    if (!is_dir($cacheDir))
-    {
-        if (file_exists($cacheDir)) {
-          unlink($cacheDir);
-        }
+        // Seems like there may be a situation where we're getting a file written instead of a dir at
+        // /tmp/cache/mypost/dev/config.  Checking if it's a file, removing it and then continuing on.
+        // Getting error that we cannot unlink a dir.  Even with this check in place.  And, permissions
+        // are correct as well.  I have no idea what's going on here.
+        if (!is_dir($cacheDir)) {
+            if (file_exists($cacheDir)) {
+                unlink($cacheDir);
+            }
 
-        if (!mkdir($cacheDir, 0777, true) && !is_dir($cacheDir))
-        {
-          throw new \sfCacheException(sprintf('Failed to make cache directory "%s" while generating cache for configuration file "%s".', $cacheDir, $config));
+            if (!mkdir($cacheDir, 0777, true) && !is_dir($cacheDir)) {
+                throw new \sfCacheException(sprintf('Failed to make cache directory "%s" while generating cache for configuration file "%s".', $cacheDir, $config));
+            }
         }
-    }
 
         $tmpFile = tempnam($cacheDir, basename($cache));
 
         if (!$fp = @fopen($tmpFile, 'wb')) {
             throw new sfCacheException(sprintf('Failed to write cache file "%s" generated from configuration file "%s".', $tmpFile, $config));
+        }
+
+        // If the data is empty, there is nothing to do here
+        if (empty($data)) {
+            $data = '';
         }
 
         @fwrite($fp, $data);
