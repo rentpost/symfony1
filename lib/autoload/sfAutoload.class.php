@@ -113,13 +113,11 @@ class sfAutoload
         }
 
         self::$freshCache = true;
-        if (is_file($configuration->getConfigCache()->getCacheName('config/autoload.yml'))) {
+        $autoloadPath = $configuration->getConfigCache()->checkConfig('config/autoload.yml');
+        if (is_file($autoloadPath) && @unlink($autoloadPath)) {
             self::$freshCache = false;
-            if ($force) {
-                if (file_exists($configuration->getConfigCache()->getCacheName('config/autoload.yml'))) {
-                    unlink($configuration->getConfigCache()->getCacheName('config/autoload.yml'));
-                }
-            }
+        } elseif (is_file($autoloadPath)) {
+            throw new sfException(sprintf('Unable to delete the existing autoload cache file "%s".', $autoloadPath));
         }
 
         $file = $configuration->getConfigCache()->checkConfig('config/autoload.yml');
