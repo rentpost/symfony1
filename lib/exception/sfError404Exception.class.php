@@ -26,8 +26,6 @@ class sfError404Exception extends sfException implements HttpAwareExceptionInter
      */
     public function printStackTrace()
     {
-        $exception = null === $this->wrappedException ? $this : $this->wrappedException;
-
         if (sfConfig::get('sf_debug')) {
             $response = sfContext::getInstance()->getResponse();
             if (null === $response) {
@@ -47,25 +45,22 @@ class sfError404Exception extends sfException implements HttpAwareExceptionInter
 
         sfContext::getInstance()->getController()->forward(sfConfig::get('sf_error_404_module'), sfConfig::get('sf_error_404_action'));
     }
-      sfContext::getInstance()->getController()->forward(sfConfig::get('sf_error_404_module'), sfConfig::get('sf_error_404_action'));
+
+
+    public function getClientMessage(): string
+    {
+        return 'Resource not found';
     }
-  }
 
 
-  public function getClientMessage(): string
-  {
-    return 'Resource not found';
-  }
+    public function getStatusCode(): int
+    {
+        return 404;
+    }
 
 
-  public function getStatusCode(): int
-  {
-    return 404;
-  }
-
-
-  public function getProblemFields(): array
-  {
-    return [];
-  }
+    public function getProblemFields(): array
+    {
+        return [];
+    }
 }
