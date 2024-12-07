@@ -586,7 +586,7 @@ class sfProjectConfiguration
         string $environment,
         bool $debug,
         ?string $rootDir = null,
-        sfEventDispatcher $dispatcher = null,
+        ?sfEventDispatcher $dispatcher = null,
     ): sfApplicationConfiguration
     {
         $class = $application.'Configuration';
