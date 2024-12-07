@@ -12,13 +12,15 @@ require_once __DIR__.'/../../../bootstrap/unit.php';
 
 $t = new lime_test(3);
 
-class ProjectConfiguration extends sfProjectConfiguration {}
+class ProjectConfiguration extends sfProjectConfiguration
+{
+}
 
 class TestConfiguration extends sfApplicationConfiguration
 {
     public function getI18NGlobalDirs()
     {
-        return array(__DIR__.'/../fixtures');
+        return [__DIR__.'/../fixtures'];
     }
 }
 
@@ -40,7 +42,7 @@ class sfI18nExtractTest extends sfI18nExtract
 
     public function getMessages()
     {
-        return array('toto', 'an english sentence');
+        return ['toto', 'an english sentence'];
     }
 }
 

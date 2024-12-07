@@ -12,8 +12,6 @@
  * Cache class that stores cached content in memcache.
  *
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- *
- * @version    SVN: $Id$
  */
 class sfMemcacheCache extends sfCache
 {
@@ -37,7 +35,7 @@ class sfMemcacheCache extends sfCache
      *
      * @see sfCache
      */
-    public function initialize($options = array())
+    public function initialize($options = [])
     {
         parent::initialize($options);
 
@@ -147,6 +145,8 @@ class sfMemcacheCache extends sfCache
         if (sfCache::ALL === $mode) {
             return $this->memcache->flush();
         }
+
+        return true;
     }
 
     /**
@@ -190,6 +190,8 @@ class sfMemcacheCache extends sfCache
                 $this->remove(substr($key, strlen($this->getOption('prefix'))));
             }
         }
+
+        return true;
     }
 
     /**
@@ -197,7 +199,7 @@ class sfMemcacheCache extends sfCache
      */
     public function getMany($keys)
     {
-        $values = array();
+        $values = [];
         $prefix = $this->getOption('prefix');
         $prefixed_keys = array_map(function ($k) use ($prefix) { return $prefix.$k; }, $keys);
 
@@ -228,7 +230,7 @@ class sfMemcacheCache extends sfCache
      */
     protected function setMetadata($key, $lifetime)
     {
-        $this->memcache->set($this->getOption('prefix').'_metadata'.self::SEPARATOR.$key, array('lastModified' => time(), 'timeout' => time() + $lifetime), false, time() + $lifetime);
+        $this->memcache->set($this->getOption('prefix').'_metadata'.self::SEPARATOR.$key, ['lastModified' => time(), 'timeout' => time() + $lifetime], false, time() + $lifetime);
     }
 
     /**
@@ -241,7 +243,7 @@ class sfMemcacheCache extends sfCache
     {
         $keys = $this->memcache->get($this->getOption('prefix').'_metadata');
         if (!is_array($keys)) {
-            $keys = array();
+            $keys = [];
         }
 
         if ($delete) {
@@ -266,7 +268,7 @@ class sfMemcacheCache extends sfCache
     {
         $keys = $this->memcache->get($this->getOption('prefix').'_metadata');
         if (!is_array($keys)) {
-            return array();
+            return [];
         }
 
         return $keys;

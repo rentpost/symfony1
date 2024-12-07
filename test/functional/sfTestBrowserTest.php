@@ -9,13 +9,13 @@
  */
 
 $app = 'frontend';
-if (!include(__DIR__.'/../bootstrap/functional.php')) {
+if (!include __DIR__.'/../bootstrap/functional.php') {
     return;
 }
 
 class TestBrowser extends sfTestBrowser
 {
-    public $events = array();
+    public $events = [];
 
     public function listen(sfEvent $event)
     {
@@ -24,7 +24,7 @@ class TestBrowser extends sfTestBrowser
 }
 
 $b = new TestBrowser();
-$b->addListener('context.load_factories', array($b, 'listen'));
+$b->addListener('context.load_factories', [$b, 'listen']);
 
 // listeners
 $b->get('/');

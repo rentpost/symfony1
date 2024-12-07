@@ -18,8 +18,6 @@ use Rentpost\Sprocket\Log\Dispatcher as LogDispatcher;
  *
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Sean Kerr <sean@code-box.org>
- *
- * @version    SVN: $Id$
  */
 abstract class sfRequest implements ArrayAccess
 {
@@ -39,7 +37,7 @@ abstract class sfRequest implements ArrayAccess
 
     /** @var string */
     protected $method;
-    protected $options = array();
+    protected $options = [];
 
     /** @var sfParameterHolder */
     protected $parameterHolder;
@@ -56,7 +54,7 @@ abstract class sfRequest implements ArrayAccess
      * @param array $attributes
      * @param array $options
      */
-    public function __construct(sfEventDispatcher $dispatcher, $parameters = array(), $attributes = array(), $options = array())
+    public function __construct(sfEventDispatcher $dispatcher, $parameters = [], $attributes = [], $options = [])
     {
         $this->initialize($dispatcher, $parameters, $attributes, $options);
     }
@@ -69,11 +67,11 @@ abstract class sfRequest implements ArrayAccess
      *
      * @return mixed The returned value of the called method
      *
-     * @throws <b>sfException</b> if call fails
+     * @throws sfException if call fails
      */
     public function __call($method, $arguments)
     {
-        $event = $this->dispatcher->notifyUntil(new sfEvent($this, 'request.method_not_found', array('method' => $method, 'arguments' => $arguments)));
+        $event = $this->dispatcher->notifyUntil(new sfEvent($this, 'request.method_not_found', ['method' => $method, 'arguments' => $arguments]));
         if (!$event->isProcessed()) {
             throw new sfException(sprintf('Call to undefined method %s::%s.', get_class($this), $method));
         }
@@ -99,9 +97,9 @@ abstract class sfRequest implements ArrayAccess
      * @param array             $attributes An associative array of initialization attributes
      * @param array             $options    An associative array of options
      *
-     * @throws <b>sfInitializationException</b> If an error occurs while initializing this sfRequest
+     * @throws sfInitializationException If an error occurs while initializing this sfRequest
      */
-    public function initialize(sfEventDispatcher $dispatcher, $parameters = array(), $attributes = array(), $options = array())
+    public function initialize(sfEventDispatcher $dispatcher, $parameters = [], $attributes = [], $options = [])
     {
         $this->dispatcher = $dispatcher;
 
@@ -152,7 +150,7 @@ abstract class sfRequest implements ArrayAccess
      */
     public function extractParameters($names)
     {
-        $array = array();
+        $array = [];
 
         $parameters = $this->parameterHolder->getAll();
         foreach ($parameters as $key => $value) {
@@ -179,11 +177,11 @@ abstract class sfRequest implements ArrayAccess
      *
      * @param string $method The request method
      *
-     * @throws <b>sfException</b> - If the specified request method is invalid
+     * @throws sfException - If the specified request method is invalid
      */
     public function setMethod($method)
     {
-        if (!in_array(strtoupper($method), array(self::GET, self::POST, self::PUT, self::PATCH, self::DELETE, self::HEAD, self::OPTIONS))) {
+        if (!in_array(strtoupper($method), [self::GET, self::POST, self::PUT, self::PATCH, self::DELETE, self::HEAD, self::OPTIONS])) {
             throw new sfException(sprintf('Invalid request method: %s.', $method));
         }
 

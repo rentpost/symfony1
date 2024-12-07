@@ -12,8 +12,6 @@
  * sfTesterViewCache implements tests for the symfony view cache manager.
  *
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- *
- * @version    SVN: $Id$
  */
 class sfTesterViewCache extends sfTester
 {
@@ -24,7 +22,9 @@ class sfTesterViewCache extends sfTester
     /**
      * Prepares the tester.
      */
-    public function prepare() {}
+    public function prepare()
+    {
+    }
 
     /**
      * Initializes the tester.

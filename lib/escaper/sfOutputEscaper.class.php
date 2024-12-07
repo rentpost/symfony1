@@ -12,8 +12,6 @@
  * Abstract class that provides an interface for escaping of output.
  *
  * @author     Mike Squire <mike@somosis.co.uk>
- *
- * @version    SVN: $Id$
  */
 abstract class sfOutputEscaper
 {
@@ -30,7 +28,7 @@ abstract class sfOutputEscaper
      */
     protected $escapingMethod;
 
-    protected static $safeClasses = array();
+    protected static $safeClasses = [];
 
     /**
      * Constructor stores the escaping method and value.
@@ -204,7 +202,7 @@ abstract class sfOutputEscaper
      */
     public static function markClassAsSafe($class)
     {
-        self::markClassesAsSafe(array($class));
+        self::markClassesAsSafe([$class]);
     }
 
     /**

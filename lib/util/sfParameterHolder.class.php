@@ -17,17 +17,17 @@
  *
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Sean Kerr <sean@code-box.org>
- *
- * @version    SVN: $Id$
  */
 class sfParameterHolder implements Serializable
 {
-    protected $parameters = array();
+    protected $parameters = [];
 
     /**
      * The constructor for sfParameterHolder.
      */
-    public function __construct() {}
+    public function __construct()
+    {
+    }
 
     /**
      * Serializes the current instance for PHP 7.4+.
@@ -41,11 +41,18 @@ class sfParameterHolder implements Serializable
 
     /**
      * Unserializes a sfParameterHolder instance for PHP 7.4+.
+     * [CVE-2024-28861] Check type of returned data to avoid deserialization vulnerabilities.
      *
      * @param array $data
      */
     public function __unserialize($data)
     {
+        if (!is_array($data)) {
+            $this->parameters = [];
+
+            return;
+        }
+
         $this->parameters = $data;
     }
 
@@ -54,7 +61,7 @@ class sfParameterHolder implements Serializable
      */
     public function clear()
     {
-        $this->parameters = array();
+        $this->parameters = [];
     }
 
     /**

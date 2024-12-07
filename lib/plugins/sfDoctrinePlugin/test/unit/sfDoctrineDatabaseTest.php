@@ -12,19 +12,21 @@ include dirname(__FILE__).'/../bootstrap/unit.php';
 
 $t = new lime_test(4);
 
-class ProjectConfiguration extends sfProjectConfiguration {}
+class ProjectConfiguration extends sfProjectConfiguration
+{
+}
 
 $configuration = new ProjectConfiguration(dirname(__FILE__).'/../../lib', new sfEventDispatcher());
 
-$parameters = array(
+$parameters = [
     'name' => 'doctrine',
     'dsn' => 'sqlite::memory',
-    'attributes' => array(
+    'attributes' => [
         'use_native_enum' => true,
         'validate' => 'all',
         'tblname_format' => 'test_%s',
-    ),
-);
+    ],
+];
 
 $p = new sfDoctrineDatabase($parameters);
 $t->is($p->getDoctrineConnection()->getName(), 'doctrine', 'initialize() - creates a valid doctrine configuration from parameters');

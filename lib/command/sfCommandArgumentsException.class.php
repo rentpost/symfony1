@@ -12,7 +12,7 @@
  * sfCommandException is thrown when an error occurs in a task.
  *
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- *
- * @version    SVN: $Id$
  */
-class sfCommandArgumentsException extends sfCommandException {}
+class sfCommandArgumentsException extends sfCommandException
+{
+}

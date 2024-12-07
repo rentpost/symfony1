@@ -13,8 +13,6 @@
  * on the next request.
  *
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- *
- * @version    SVN: $Id$
  */
 class sfWebDebugPanelCache extends sfWebDebugPanel
 {
@@ -39,5 +37,7 @@ class sfWebDebugPanelCache extends sfWebDebugPanel
         return 'reload and ignore cache';
     }
 
-    public function getPanelContent() {}
+    public function getPanelContent()
+    {
+    }
 }

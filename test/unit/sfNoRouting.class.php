@@ -36,7 +36,7 @@ class sfNoRouting extends sfRouting
     /**
      * @see sfRouting
      */
-    public function generate($name, $params = array(), $absolute = false)
+    public function generate($name, $params = [], $absolute = false)
     {
         $parameters = $this->mergeArrays($this->defaultParameters, $params);
         if ($this->getDefaultParameter('module') == $parameters['module']) {
@@ -56,7 +56,7 @@ class sfNoRouting extends sfRouting
      */
     public function parse($url)
     {
-        return array();
+        return [];
     }
 
     /**
@@ -64,7 +64,7 @@ class sfNoRouting extends sfRouting
      */
     public function getRoutes()
     {
-        return array();
+        return [];
     }
 
     /**
@@ -80,7 +80,7 @@ class sfNoRouting extends sfRouting
      */
     public function setRoutes($routes)
     {
-        return array();
+        return [];
     }
 
     /**
@@ -94,7 +94,9 @@ class sfNoRouting extends sfRouting
     /**
      * @see sfRouting
      */
-    public function clearRoutes() {}
+    public function clearRoutes()
+    {
+    }
 
     protected function mergeArrays($arr1, $arr2)
     {

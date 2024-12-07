@@ -12,8 +12,6 @@
  * Clears all non production environment controllers.
  *
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- *
- * @version    SVN: $Id$
  */
 class sfProjectClearControllersTask extends sfBaseTask
 {
@@ -57,7 +55,7 @@ EOF;
     /**
      * @see sfTask
      */
-    protected function execute($arguments = array(), $options = array())
+    protected function execute($arguments = [], $options = [])
     {
         $finder = sfFinder::type('file')->maxdepth(1)->name('*.php');
         foreach ($finder->in(sfConfig::get('sf_web_dir')) as $controller) {
@@ -70,5 +68,7 @@ EOF;
                 }
             }
         }
+
+        return 0;
     }
 }

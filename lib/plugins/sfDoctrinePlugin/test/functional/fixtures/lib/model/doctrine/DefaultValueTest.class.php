@@ -7,10 +7,10 @@
  *
  * @author     ##NAME## <##EMAIL##>
  *
- * @version    SVN: $Id$
- *
  * @internal
  *
  * @coversNothing
  */
-class DefaultValueTest extends BaseDefaultValueTest {}
+class DefaultValueTest extends BaseDefaultValueTest
+{
+}

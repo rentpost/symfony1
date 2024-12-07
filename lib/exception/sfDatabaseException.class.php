@@ -14,7 +14,7 @@
  *
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Sean Kerr <sean@code-box.org>
- *
- * @version    SVN: $Id$
  */
-class sfDatabaseException extends sfException {}
+class sfDatabaseException extends sfException
+{
+}

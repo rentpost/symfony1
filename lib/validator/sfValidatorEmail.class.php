@@ -12,8 +12,6 @@
  * sfValidatorEmail validates emails.
  *
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- *
- * @version    SVN: $Id$
  */
 class sfValidatorEmail extends sfValidatorRegex
 {
@@ -22,7 +20,7 @@ class sfValidatorEmail extends sfValidatorRegex
     /**
      * @see sfValidatorRegex
      */
-    protected function configure($options = array(), $messages = array())
+    protected function configure($options = [], $messages = [])
     {
         parent::configure($options, $messages);
 

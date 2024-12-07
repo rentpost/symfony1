@@ -19,8 +19,6 @@
  *     message: { type: clob, notnull: true }
  *
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- *
- * @version    SVN: $Id$
  */
 class Swift_DoctrineSpool extends Swift_ConfigurableSpool
 {
@@ -55,12 +53,16 @@ class Swift_DoctrineSpool extends Swift_ConfigurableSpool
     /**
      * Starts this Transport mechanism.
      */
-    public function start() {}
+    public function start()
+    {
+    }
 
     /**
      * Stops this Transport mechanism.
      */
-    public function stop() {}
+    public function stop()
+    {
+    }
 
     /**
      * Stores a message in the queue.

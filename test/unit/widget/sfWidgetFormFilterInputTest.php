@@ -12,9 +12,11 @@ require_once __DIR__.'/../../bootstrap/unit.php';
 
 class FormFormatterStub extends sfWidgetFormSchemaFormatter
 {
-    public function __construct() {}
+    public function __construct()
+    {
+    }
 
-    public function translate($subject, $parameters = array())
+    public function translate($subject, $parameters = [])
     {
         return sprintf('translation[%s]', $subject);
     }

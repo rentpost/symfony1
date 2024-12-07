@@ -12,8 +12,6 @@
  * Autoload again for dev environments.
  *
  * @author     Kris Wallsmith <kris.wallsmith@symfony-project.com>
- *
- * @version    SVN: $Id$
  */
 class sfAutoloadAgain
 {
@@ -25,7 +23,9 @@ class sfAutoloadAgain
     /**
      * Constructor.
      */
-    protected function __construct() {}
+    protected function __construct()
+    {
+    }
 
     /**
      * Returns the singleton autoloader.
@@ -65,7 +65,7 @@ class sfAutoloadAgain
                 }
             }
         } else {
-            $position = array_search(array(__CLASS__, 'autoload'), $autoloads, true);
+            $position = array_search([__CLASS__, 'autoload'], $autoloads, true);
         }
 
         if (isset($autoloads[$position + 1])) {
@@ -102,7 +102,7 @@ class sfAutoloadAgain
     public function register()
     {
         if (!$this->isRegistered()) {
-            spl_autoload_register(array($this, 'autoload'));
+            spl_autoload_register([$this, 'autoload']);
             $this->registered = true;
         }
     }
@@ -112,7 +112,7 @@ class sfAutoloadAgain
      */
     public function unregister()
     {
-        spl_autoload_unregister(array($this, 'autoload'));
+        spl_autoload_unregister([$this, 'autoload']);
         $this->registered = false;
     }
 }

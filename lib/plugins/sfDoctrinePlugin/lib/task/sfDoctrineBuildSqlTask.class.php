@@ -16,8 +16,6 @@ require_once dirname(__FILE__).'/sfDoctrineBaseTask.class.php';
  *
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Jonathan H. Wage <jonwage@gmail.com>
- *
- * @version    SVN: $Id$
  */
 class sfDoctrineBuildSqlTask extends sfDoctrineBaseTask
 {
@@ -26,10 +24,10 @@ class sfDoctrineBuildSqlTask extends sfDoctrineBaseTask
      */
     protected function configure()
     {
-        $this->addOptions(array(
+        $this->addOptions([
             new sfCommandOption('application', null, sfCommandOption::PARAMETER_OPTIONAL, 'The application name', true),
             new sfCommandOption('env', null, sfCommandOption::PARAMETER_REQUIRED, 'The environment', 'dev'),
-        ));
+        ]);
 
         $this->namespace = 'doctrine';
         $this->name = 'build-sql';
@@ -49,7 +47,7 @@ EOF;
     /**
      * @see sfTask
      */
-    protected function execute($arguments = array(), $options = array())
+    protected function execute($arguments = [], $options = [])
     {
         $this->logSection('doctrine', 'generating sql for models');
 

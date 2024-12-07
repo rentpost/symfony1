@@ -12,8 +12,6 @@
  * sfWidgetFormSchemaFormatter allows to format a form schema with HTML formats.
  *
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- *
- * @version    SVN: $Id$
  */
 abstract class sfWidgetFormSchemaFormatter
 {
@@ -37,15 +35,15 @@ abstract class sfWidgetFormSchemaFormatter
         $this->setWidgetSchema($widgetSchema);
     }
 
-    public function formatRow($label, $field, $errors = array(), $help = '', $hiddenFields = null)
+    public function formatRow($label, $field, $errors = [], $help = '', $hiddenFields = null)
     {
-        return strtr($this->getRowFormat(), array(
+        return strtr($this->getRowFormat(), [
             '%label%' => $label,
             '%field%' => $field,
             '%error%' => $this->formatErrorsForRow($errors),
             '%help%' => $this->formatHelp($help),
             '%hidden_fields%' => null === $hiddenFields ? '%hidden_fields%' : $hiddenFields,
-        ));
+        ]);
     }
 
     /**
@@ -56,7 +54,7 @@ abstract class sfWidgetFormSchemaFormatter
      *
      * @return string
      */
-    public function translate($subject, $parameters = array())
+    public function translate($subject, $parameters = [])
     {
         if (false === $subject) {
             return false;
@@ -110,7 +108,7 @@ abstract class sfWidgetFormSchemaFormatter
             return '';
         }
 
-        return strtr($this->getHelpFormat(), array('%help%' => $this->translate($help)));
+        return strtr($this->getHelpFormat(), ['%help%' => $this->translate($help)]);
     }
 
     public function formatErrorRow($errors)
@@ -119,7 +117,7 @@ abstract class sfWidgetFormSchemaFormatter
             return '';
         }
 
-        return strtr($this->getErrorRowFormat(), array('%errors%' => $this->formatErrorsForRow($errors)));
+        return strtr($this->getErrorRowFormat(), ['%errors%' => $this->formatErrorsForRow($errors)]);
     }
 
     public function formatErrorsForRow($errors)
@@ -129,10 +127,10 @@ abstract class sfWidgetFormSchemaFormatter
         }
 
         if (!is_array($errors)) {
-            $errors = array($errors);
+            $errors = [$errors];
         }
 
-        return strtr($this->getErrorListFormatInARow(), array('%errors%' => implode('', $this->unnestErrors($errors))));
+        return strtr($this->getErrorListFormatInARow(), ['%errors%' => implode('', $this->unnestErrors($errors))]);
     }
 
     /**
@@ -143,7 +141,7 @@ abstract class sfWidgetFormSchemaFormatter
      *
      * @return string The label tag
      */
-    public function generateLabel($name, $attributes = array())
+    public function generateLabel($name, $attributes = [])
     {
         $labelName = $this->generateLabelName($name);
 
@@ -289,7 +287,7 @@ abstract class sfWidgetFormSchemaFormatter
 
     protected function unnestErrors($errors, $prefix = '')
     {
-        $newErrors = array();
+        $newErrors = [];
 
         foreach ($errors as $name => $error) {
             if ($error instanceof ArrayAccess || is_array($error)) {
@@ -302,9 +300,9 @@ abstract class sfWidgetFormSchemaFormatter
                 }
 
                 if (!is_int($name)) {
-                    $newErrors[] = strtr($this->getNamedErrorRowFormatInARow(), array('%error%' => $err, '%name%' => ($prefix ? $prefix.' > ' : '').$name));
+                    $newErrors[] = strtr($this->getNamedErrorRowFormatInARow(), ['%error%' => $err, '%name%' => ($prefix ? $prefix.' > ' : '').$name]);
                 } else {
-                    $newErrors[] = strtr($this->getErrorRowFormatInARow(), array('%error%' => $err));
+                    $newErrors[] = strtr($this->getErrorRowFormatInARow(), ['%error%' => $err]);
                 }
             }
         }

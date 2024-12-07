@@ -12,8 +12,6 @@
  * sfTesterRequest implements tests for the symfony request object.
  *
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- *
- * @version    SVN: $Id$
  */
 class sfTesterRequest extends sfTester
 {
@@ -22,7 +20,9 @@ class sfTesterRequest extends sfTester
     /**
      * Prepares the tester.
      */
-    public function prepare() {}
+    public function prepare()
+    {
+    }
 
     /**
      * Initializes the tester.

@@ -16,8 +16,6 @@ use Rentpost\Exception\ClientAwareInterface;
  * sfError404Exception is thrown when a 404 error occurs in an action.
  *
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- *
- * @version    SVN: $Id$
  */
 class sfError404Exception extends sfException implements HttpAwareExceptionInterface, ClientAwareInterface
 {

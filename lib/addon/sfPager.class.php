@@ -12,8 +12,6 @@
  * sfPager class.
  *
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- *
- * @version    SVN: $Id$
  */
 abstract class sfPager implements Iterator, Countable
 {
@@ -25,7 +23,7 @@ abstract class sfPager implements Iterator, Countable
     protected $tableName = '';
     protected $objects;
     protected $cursor = 1;
-    protected $parameters = array();
+    protected $parameters = [];
     protected $currentMaxLink = 1;
     protected $parameterHolder;
     protected $maxRecordLimit = false;
@@ -99,7 +97,7 @@ abstract class sfPager implements Iterator, Countable
      */
     public function getLinks($nb_links = 5)
     {
-        $links = array();
+        $links = [];
         $tmp = $this->page - floor($nb_links / 2);
         $check = $this->lastPage - $nb_links + 1;
         $limit = $check > 0 ? $check : 1;

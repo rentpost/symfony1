@@ -12,8 +12,6 @@
  * sfPluginConfiguration represents a configuration for a symfony plugin.
  *
  * @author     Kris Wallsmith <kris.wallsmith@symfony-project.com>
- *
- * @version    SVN: $Id$
  */
 abstract class sfPluginConfiguration
 {
@@ -50,14 +48,18 @@ abstract class sfPluginConfiguration
      *
      * This method can be used when creating a base plugin configuration class for other plugins to extend.
      */
-    public function setup() {}
+    public function setup()
+    {
+    }
 
     /**
      * Configures the plugin.
      *
      * This method is called before the plugin's classes have been added to sfAutoload.
      */
-    public function configure() {}
+    public function configure()
+    {
+    }
 
     /**
      * Initializes the plugin.
@@ -66,7 +68,9 @@ abstract class sfPluginConfiguration
      *
      * @return bool|null If false sfApplicationConfiguration will look for a config.php (maintains BC with symfony < 1.2)
      */
-    public function initialize() {}
+    public function initialize()
+    {
+    }
 
     /**
      * Returns the plugin root directory.
@@ -102,9 +106,9 @@ abstract class sfPluginConfiguration
         $autoload = sfSimpleAutoload::getInstance(sfConfig::get('sf_cache_dir').'/project_autoload.cache');
 
         if (is_readable($file = $this->rootDir.'/config/autoload.yml')) {
-            $this->configuration->getEventDispatcher()->connect('autoload.filter_config', array($this, 'filterAutoloadConfig'));
-            $autoload->loadConfiguration(array($file));
-            $this->configuration->getEventDispatcher()->disconnect('autoload.filter_config', array($this, 'filterAutoloadConfig'));
+            $this->configuration->getEventDispatcher()->connect('autoload.filter_config', [$this, 'filterAutoloadConfig']);
+            $autoload->loadConfiguration([$file]);
+            $this->configuration->getEventDispatcher()->disconnect('autoload.filter_config', [$this, 'filterAutoloadConfig']);
         } else {
             $autoload->addDirectory($this->rootDir.'/lib');
         }
@@ -121,22 +125,22 @@ abstract class sfPluginConfiguration
     {
         // use array_merge so config is added to the front of the autoload array
         if (!isset($config['autoload'][$this->name.'_lib'])) {
-            $config['autoload'] = array_merge(array(
-                $this->name.'_lib' => array(
+            $config['autoload'] = array_merge([
+                $this->name.'_lib' => [
                     'path' => $this->rootDir.'/lib',
                     'recursive' => true,
-                ),
-            ), $config['autoload']);
+                ],
+            ], $config['autoload']);
         }
 
         if (!isset($config['autoload'][$this->name.'_module_libs'])) {
-            $config['autoload'] = array_merge(array(
-                $this->name.'_module_libs' => array(
+            $config['autoload'] = array_merge([
+                $this->name.'_module_libs' => [
                     'path' => $this->rootDir.'/modules/*/lib',
                     'recursive' => true,
                     'prefix' => 1,
-                ),
-            ), $config['autoload']);
+                ],
+            ], $config['autoload']);
         }
 
         return $config;
@@ -147,7 +151,7 @@ abstract class sfPluginConfiguration
      */
     public function connectTests()
     {
-        $this->dispatcher->connect('task.test.filter_test_files', array($this, 'filterTestFiles'));
+        $this->dispatcher->connect('task.test.filter_test_files', [$this, 'filterTestFiles']);
     }
 
     /**
@@ -163,7 +167,7 @@ abstract class sfPluginConfiguration
 
         if ($task instanceof sfTestAllTask) {
             $directory = $this->rootDir.'/test';
-            $names = array();
+            $names = [];
         } elseif ($task instanceof sfTestFunctionalTask) {
             $directory = $this->rootDir.'/test/functional';
             $names = $event['arguments']['controller'];
@@ -173,7 +177,7 @@ abstract class sfPluginConfiguration
         }
 
         if (!count($names)) {
-            $names = array('*');
+            $names = ['*'];
         }
 
         foreach ($names as $name) {

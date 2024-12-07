@@ -14,8 +14,6 @@ require_once __DIR__.'/sfGeneratorBaseTask.class.php';
  * Generates a new module.
  *
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- *
- * @version    SVN: $Id$
  */
 class sfGenerateModuleTask extends sfGeneratorBaseTask
 {
@@ -24,10 +22,10 @@ class sfGenerateModuleTask extends sfGeneratorBaseTask
      */
     protected function configure()
     {
-        $this->addArguments(array(
+        $this->addArguments([
             new sfCommandArgument('application', sfCommandArgument::REQUIRED, 'The application name'),
             new sfCommandArgument('module', sfCommandArgument::REQUIRED, 'The module name'),
-        ));
+        ]);
 
         $this->namespace = 'generate';
         $this->name = 'module';
@@ -62,7 +60,7 @@ EOF;
     /**
      * @see sfTask
      */
-    protected function execute($arguments = array(), $options = array())
+    protected function execute($arguments = [], $options = [])
     {
         throw new \Exception('Generating is no longer supported due to deprecated functionality, please manually create files.');
 
@@ -82,12 +80,12 @@ EOF;
 
         $properties = parse_ini_file(sfConfig::get('sf_config_dir').'/properties.ini', true);
 
-        $constants = array(
+        $constants = [
             'PROJECT_NAME' => isset($properties['symfony']['name']) ? $properties['symfony']['name'] : 'symfony',
             'APP_NAME' => $app,
             'MODULE_NAME' => $module,
             'AUTHOR_NAME' => isset($properties['symfony']['author']) ? $properties['symfony']['author'] : 'Your name here',
-        );
+        ];
 
         if (is_readable(sfConfig::get('sf_data_dir').'/skeleton/module')) {
             $skeletonDir = sfConfig::get('sf_data_dir').'/skeleton/module';
@@ -108,5 +106,7 @@ EOF;
         // customize php and yml files
         $finder = sfFinder::type('file')->name('*.php', '*.yml');
         $this->getFilesystem()->replaceTokens($finder->in($moduleDir), '##', '##', $constants);
+
+        return 0;
     }
 }

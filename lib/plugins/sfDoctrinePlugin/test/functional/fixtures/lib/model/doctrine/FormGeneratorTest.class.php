@@ -7,10 +7,10 @@
  *
  * @author     ##NAME## <##EMAIL##>
  *
- * @version    SVN: $Id$
- *
  * @internal
  *
  * @coversNothing
  */
-class FormGeneratorTest extends BaseFormGeneratorTest {}
+class FormGeneratorTest extends BaseFormGeneratorTest
+{
+}

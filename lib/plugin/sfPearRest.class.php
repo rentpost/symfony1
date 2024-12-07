@@ -14,8 +14,6 @@ require_once 'PEAR/REST.php';
  * sfPearRest interacts with a PEAR channel.
  *
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- *
- * @version    SVN: $Id$
  */
 class sfPearRest extends PEAR_REST
 {
@@ -26,6 +24,6 @@ class sfPearRest extends PEAR_REST
      */
     public function downloadHttp($url, $lastmodified = null, $accept = false, $channel = false)
     {
-        return parent::downloadHttp($url, $lastmodified, array_merge(false !== $accept ? $accept : array(), array("\r\nX-SYMFONY-VERSION: ".SYMFONY_VERSION)));
+        return parent::downloadHttp($url, $lastmodified, array_merge(false !== $accept ? $accept : [], ["\r\nX-SYMFONY-VERSION: ".SYMFONY_VERSION]));
     }
 }

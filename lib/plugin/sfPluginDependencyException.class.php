@@ -12,7 +12,7 @@
  * sfPluginDependencyException.
  *
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- *
- * @version    SVN: $Id$
  */
-class sfPluginDependencyException extends sfPluginException {}
+class sfPluginDependencyException extends sfPluginException
+{
+}

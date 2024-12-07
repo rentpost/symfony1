@@ -17,8 +17,6 @@
  *
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Sean Kerr <sean@code-box.org>
- *
- * @version    SVN: $Id$
  */
 class sfUser implements ArrayAccess
 {
@@ -29,7 +27,7 @@ class sfUser implements ArrayAccess
 
     public const CULTURE_NAMESPACE = 'symfony/user/sfUser/culture';
 
-    protected $options = array();
+    protected $options = [];
 
     /** @var sfNamespacedParameterHolder */
     protected $attributeHolder;
@@ -53,8 +51,28 @@ class sfUser implements ArrayAccess
         $this->initialize($dispatcher, $storage, $options);
 
         if ($this->options['auto_shutdown']) {
-            register_shutdown_function(array($this, 'shutdown'));
+            register_shutdown_function([$this, 'shutdown']);
         }
+    }
+
+    /**
+     * Calls methods defined via sfEventDispatcher.
+     *
+     * @param string $method    The method name
+     * @param array  $arguments The method arguments
+     *
+     * @return mixed The returned value of the called method
+     *
+     * @throws sfException If the calls fails
+     */
+    public function __call($method, $arguments)
+    {
+        $event = $this->dispatcher->notifyUntil(new sfEvent($this, 'user.method_not_found', ['method' => $method, 'arguments' => $arguments]));
+        if (!$event->isProcessed()) {
+            throw new sfException(sprintf('Call to undefined method %s::%s.', get_class($this), $method));
+        }
+
+        return $event->getReturnValue();
     }
 
     /**
@@ -77,13 +95,13 @@ class sfUser implements ArrayAccess
         $this->dispatcher = $dispatcher;
         $this->storage = $storage;
 
-        $this->options = array_merge(array(
+        $this->options = array_merge([
             'auto_shutdown' => true,
             'culture' => null,
             'default_culture' => 'en',
             'use_flash' => false,
             'logging' => false,
-        ), $options);
+        ], $options);
 
         $this->attributeHolder = new sfNamespacedParameterHolder(self::ATTRIBUTE_NAMESPACE);
 
@@ -105,7 +123,7 @@ class sfUser implements ArrayAccess
         // flag current flash to be removed at shutdown
         if ($this->options['use_flash'] && $names = $this->attributeHolder->getNames('symfony/user/sfUser/flash')) {
             if ($this->options['logging']) {
-                $this->dispatcher->notify(new sfEvent($this, 'application.log', array(sprintf('Flag old flash messages ("%s")', implode('", "', $names)))));
+                $this->dispatcher->notify(new sfEvent($this, 'application.log', [sprintf('Flag old flash messages ("%s")', implode('", "', $names))]));
             }
 
             foreach ($names as $name) {
@@ -134,7 +152,7 @@ class sfUser implements ArrayAccess
         if ($this->culture != $culture) {
             $this->culture = $culture;
 
-            $this->dispatcher->notify(new sfEvent($this, 'user.change_culture', array('culture' => $culture)));
+            $this->dispatcher->notify(new sfEvent($this, 'user.change_culture', ['culture' => $culture]));
         }
     }
 
@@ -281,7 +299,7 @@ class sfUser implements ArrayAccess
         // remove flash that are tagged to be removed
         if ($this->options['use_flash'] && $names = $this->attributeHolder->getNames('symfony/user/sfUser/flash/remove')) {
             if ($this->options['logging']) {
-                $this->dispatcher->notify(new sfEvent($this, 'application.log', array(sprintf('Remove old flash messages ("%s")', implode('", "', $names)))));
+                $this->dispatcher->notify(new sfEvent($this, 'application.log', [sprintf('Remove old flash messages ("%s")', implode('", "', $names))]));
             }
 
             foreach ($names as $name) {
@@ -290,7 +308,7 @@ class sfUser implements ArrayAccess
             }
         }
 
-        $attributes = array();
+        $attributes = [];
         foreach ($this->attributeHolder->getNamespaces() as $namespace) {
             $attributes[$namespace] = $this->attributeHolder->getAll($namespace);
         }

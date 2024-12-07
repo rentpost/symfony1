@@ -16,8 +16,6 @@
  * The options and messages are proxied from the decorated validator.
  *
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- *
- * @version    SVN: $Id$
  */
 abstract class sfValidatorDecorator extends sfValidatorBase
 {
@@ -26,7 +24,7 @@ abstract class sfValidatorDecorator extends sfValidatorBase
     /**
      * @see sfValidatorBase
      */
-    public function __construct($options = array(), $messages = array())
+    public function __construct($options = [], $messages = [])
     {
         $this->validator = $this->getValidator();
 
@@ -65,6 +63,8 @@ abstract class sfValidatorDecorator extends sfValidatorBase
     public function setMessage($name, $value)
     {
         $this->validator->setMessage($name, $value);
+
+        return $this;
     }
 
     /**
@@ -97,6 +97,8 @@ abstract class sfValidatorDecorator extends sfValidatorBase
     public function setOption($name, $value)
     {
         $this->validator->setOption($name, $value);
+
+        return $this;
     }
 
     /**
@@ -121,6 +123,8 @@ abstract class sfValidatorDecorator extends sfValidatorBase
     public function setOptions($values)
     {
         $this->validator->setOptions($values);
+
+        return $this;
     }
 
     /**

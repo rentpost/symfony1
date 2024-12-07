@@ -12,8 +12,6 @@
  * Cache class that stores content in files.
  *
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- *
- * @version    SVN: $Id$
  */
 class sfFileCache extends sfCache
 {
@@ -34,7 +32,7 @@ class sfFileCache extends sfCache
      *
      * @see sfCache
      */
-    public function initialize($options = array())
+    public function initialize($options = [])
     {
         parent::initialize($options);
 
@@ -107,7 +105,7 @@ class sfFileCache extends sfCache
             $pattern = str_replace(sfCache::SEPARATOR, DIRECTORY_SEPARATOR, $pattern).self::EXTENSION;
 
             $regexp = self::patternToRegexp($pattern);
-            $paths = array();
+            $paths = [];
             foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator($this->getOption('cache_dir'))) as $path) {
                 if (preg_match($regexp, str_replace($this->getOption('cache_dir').DIRECTORY_SEPARATOR, '', $path))) {
                     $paths[] = $path;
@@ -124,6 +122,8 @@ class sfFileCache extends sfCache
                 @unlink($path);
             }
         }
+
+        return true;
     }
 
     /**
@@ -264,7 +264,7 @@ class sfFileCache extends sfCache
 
         $cacheDir = dirname($path);
         if (!is_dir($cacheDir) && !@mkdir($cacheDir, 0777, true) && !is_dir($cacheDir)) {
-            throw new \sfCacheException(sprintf('Cache was not able to create a directory "%s".', $cacheDir));
+            throw new sfCacheException(sprintf('Cache was not able to create a directory "%s".', $cacheDir));
         }
 
         $tmpFile = tempnam($cacheDir, basename($path));

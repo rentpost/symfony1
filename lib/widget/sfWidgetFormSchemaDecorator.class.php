@@ -12,8 +12,6 @@
  * sfWidgetFormSchemaDecorator wraps a form schema widget inside a given HTML snippet.
  *
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- *
- * @version    SVN: $Id$
  */
 class sfWidgetFormSchemaDecorator extends sfWidgetFormSchema
 {
@@ -63,9 +61,9 @@ class sfWidgetFormSchemaDecorator extends sfWidgetFormSchema
      *
      * @return string
      */
-    public function render($name, $values = array(), $attributes = array(), $errors = array())
+    public function render($name, $values = [], $attributes = [], $errors = [])
     {
-        return strtr($this->decorator, array('%content%' => $this->widget->render($name, $values, $attributes, $errors)));
+        return strtr($this->decorator, ['%content%' => $this->widget->render($name, $values, $attributes, $errors)]);
     }
 
     /**
@@ -243,7 +241,7 @@ class sfWidgetFormSchemaDecorator extends sfWidgetFormSchema
      *
      * @param mixed|null $value
      */
-    public function renderField($name, $value = null, $attributes = array(), $errors = array())
+    public function renderField($name, $value = null, $attributes = [], $errors = [])
     {
         return $this->widget->renderField($name, $value, $attributes, $errors);
     }
@@ -283,7 +281,7 @@ class sfWidgetFormSchemaDecorator extends sfWidgetFormSchema
     /**
      * @see sfWidgetFormSchema
      */
-    public function setParent(sfWidgetFormSchema $parent = null)
+    public function setParent(?sfWidgetFormSchema $parent = null)
     {
         $this->widget->setParent($parent);
 

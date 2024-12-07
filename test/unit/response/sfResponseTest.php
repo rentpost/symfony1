@@ -12,16 +12,26 @@ require_once __DIR__.'/../../bootstrap/unit.php';
 
 class myResponse extends sfResponse
 {
-    public function __serialize() {}
+    public function __serialize()
+    {
+    }
 
-    public function __unserialize($data) {}
+    public function __unserialize($data)
+    {
+    }
 
-    public function serialize() {}
+    public function serialize()
+    {
+    }
 
-    public function unserialize($serialized) {}
+    public function unserialize($serialized)
+    {
+    }
 }
 
-class fakeResponse {}
+class fakeResponse
+{
+}
 
 $t = new lime_test(8);
 
@@ -29,7 +39,7 @@ $dispatcher = new sfEventDispatcher();
 
 // ->initialize()
 $t->diag('->initialize()');
-$response = new myResponse($dispatcher, array('foo' => 'bar'));
+$response = new myResponse($dispatcher, ['foo' => 'bar']);
 $options = $response->getOptions();
 $t->is($options['foo'], 'bar', '->initialize() takes an array of options as its second argument');
 $t->is($options['logging'], false, '->getOptions() returns options for response instance');

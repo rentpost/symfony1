@@ -24,7 +24,9 @@ class TestTask extends sfBaseTask
         parent::initializeAutoload($configuration, $reload);
     }
 
-    protected function execute($arguments = array(), $options = array()) {}
+    protected function execute($arguments = [], $options = [])
+    {
+    }
 }
 
 $rootDir = __DIR__.'/../../functional/fixtures';
@@ -78,7 +80,7 @@ class ApplicationTask extends sfBaseTask
         $this->addOption('application', null, sfCommandOption::PARAMETER_REQUIRED, '', true);
     }
 
-    protected function execute($arguments = array(), $options = array())
+    protected function execute($arguments = [], $options = [])
     {
         if (!$this->configuration instanceof sfApplicationConfiguration) {
             throw new Exception('This task requires an application configuration be loaded.');

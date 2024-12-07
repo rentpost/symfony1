@@ -12,8 +12,6 @@
  * sfNoLogger is a noop logger.
  *
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- *
- * @version    SVN: $Id$
  */
 class sfNoLogger extends sfLogger
 {
@@ -23,7 +21,9 @@ class sfNoLogger extends sfLogger
      * @param sfEventDispatcher $dispatcher A sfEventDispatcher instance
      * @param array             $options    an array of options
      */
-    public function initialize(sfEventDispatcher $dispatcher, $options = array()) {}
+    public function initialize(sfEventDispatcher $dispatcher, $options = [])
+    {
+    }
 
     /**
      * Logs a message.
@@ -31,5 +31,7 @@ class sfNoLogger extends sfLogger
      * @param string $message  Message
      * @param int    $priority Message priority
      */
-    protected function doLog($message, $priority) {}
+    protected function doLog($message, $priority)
+    {
+    }
 }

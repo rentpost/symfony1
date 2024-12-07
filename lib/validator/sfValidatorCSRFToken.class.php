@@ -12,15 +12,13 @@
  * sfValidatorCSRFToken checks that the token is valid.
  *
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- *
- * @version    SVN: $Id$
  */
 class sfValidatorCSRFToken extends sfValidatorBase
 {
     /**
      * @see sfValidatorBase
      */
-    protected function configure($options = array(), $messages = array())
+    protected function configure($options = [], $messages = [])
     {
         $this->addRequiredOption('token');
 

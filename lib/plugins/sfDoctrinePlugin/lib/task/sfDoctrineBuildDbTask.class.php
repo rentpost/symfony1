@@ -16,8 +16,6 @@ require_once dirname(__FILE__).'/sfDoctrineBaseTask.class.php';
  *
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Jonathan H. Wage <jonwage@gmail.com>
- *
- * @version    SVN: $Id$
  */
 class sfDoctrineBuildDbTask extends sfDoctrineBaseTask
 {
@@ -26,16 +24,16 @@ class sfDoctrineBuildDbTask extends sfDoctrineBaseTask
      */
     protected function configure()
     {
-        $this->addArguments(array(
+        $this->addArguments([
             new sfCommandArgument('database', sfCommandArgument::OPTIONAL | sfCommandArgument::IS_ARRAY, 'A specific database'),
-        ));
+        ]);
 
-        $this->addOptions(array(
+        $this->addOptions([
             new sfCommandOption('application', null, sfCommandOption::PARAMETER_OPTIONAL, 'The application name', true),
             new sfCommandOption('env', null, sfCommandOption::PARAMETER_REQUIRED, 'The environment', 'dev'),
-        ));
+        ]);
 
-        $this->aliases = array('doctrine:create-db');
+        $this->aliases = ['doctrine:create-db'];
         $this->namespace = 'doctrine';
         $this->name = 'build-db';
         $this->briefDescription = 'Creates database for current model';
@@ -55,7 +53,7 @@ EOF;
     /**
      * @see sfTask
      */
-    protected function execute($arguments = array(), $options = array())
+    protected function execute($arguments = [], $options = [])
     {
         $databaseManager = new sfDatabaseManager($this->configuration);
         $databases = $this->getDoctrineDatabases($databaseManager, count($arguments['database']) ? $arguments['database'] : null);

@@ -10,7 +10,7 @@
 
 /**
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- *
- * @version    SVN: $Id$
  */
-abstract class sfI18nYamlExtractor implements sfI18nExtractorInterface {}
+abstract class sfI18nYamlExtractor implements sfI18nExtractorInterface
+{
+}

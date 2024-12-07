@@ -18,8 +18,6 @@ use Rentpost\Sprocket\Log\Dispatcher as LogDispatcher;
  *
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Sean Kerr <sean@code-box.org>
- *
- * @version    SVN: $Id$
  */
 class sfException extends Exception
 {
@@ -118,11 +116,11 @@ class sfException extends Exception
      */
     public static function getTemplatePathForError($format, $debug)
     {
-        $templatePaths = array(
+        $templatePaths = [
             sfConfig::get('sf_app_config_dir').'/error',
             sfConfig::get('sf_config_dir').'/error',
             __DIR__.'/data',
-        );
+        ];
 
         $template = sprintf('%s.%s.php', $debug ? 'exception' : 'error', $format);
         foreach ($templatePaths as $path) {
@@ -134,6 +132,116 @@ class sfException extends Exception
         return false;
     }
 
+    /**
+     * Gets the stack trace for this exception.
+     *
+     * @param Exception|Throwable $exception
+     */
+    protected static function outputStackTrace($exception)
+    {
+        $format = 'html';
+        $code = '500';
+        $text = 'Internal Server Error';
+
+        $response = null;
+        if (class_exists('sfContext', false) && sfContext::hasInstance() && is_object($request = sfContext::getInstance()->getRequest()) && is_object($response = sfContext::getInstance()->getResponse())) {
+            /** @var sfWebRequest $request */
+            /** @var sfWebResponse $response */
+            $dispatcher = sfContext::getInstance()->getEventDispatcher();
+
+            if (sfConfig::get('sf_logging_enabled')) {
+                $priority = $exception instanceof sfError404Exception ? sfLogger::ERR : sfLogger::CRIT;
+                $dispatcher->notify(new sfEvent($exception, 'application.log', [$exception->getMessage(), 'priority' => $priority]));
+            }
+
+            $event = $dispatcher->notifyUntil(new sfEvent($exception, 'application.throw_exception'));
+            if ($event->isProcessed()) {
+                return;
+            }
+
+            if ($response->getStatusCode() < 300) {
+                // status code has already been sent, but is included here for the purpose of testing
+                $response->setStatusCode(500);
+            }
+
+            $response->setContentType('text/html');
+
+            if (!sfConfig::get('sf_test')) {
+                foreach ($response->getHttpHeaders() as $name => $value) {
+                    header($name.': '.$value);
+                }
+            }
+
+            $code = $response->getStatusCode();
+            $text = $response->getStatusText();
+
+            $format = $request->getRequestFormat();
+            if (!$format) {
+                $format = 'html';
+            }
+
+            if ($mimeType = $request->getMimeType($format)) {
+                $response->setContentType($mimeType);
+            }
+        } else {
+            // a backward compatible default
+            if (!sfConfig::get('sf_test')) {
+                header('Content-Type: text/html; charset='.sfConfig::get('sf_charset', 'utf-8'));
+            }
+        }
+
+        // send an error 500 if not in debug mode
+        if (!sfConfig::get('sf_debug')) {
+            if ($template = self::getTemplatePathForError($format, false)) {
+                include $template;
+
+                return;
+            }
+        }
+
+        // when using CLI, we force the format to be TXT. Compare exactly to
+        // the string 'cli' because the php 5.4 server is identified by 'cli-server'
+        if ('cli' == PHP_SAPI) {
+            $format = 'txt';
+        }
+
+        $message = null === $exception->getMessage() ? 'n/a' : $exception->getMessage();
+        $name = get_class($exception);
+        $traces = self::getTraces($exception, $format);
+
+        // dump main objects values
+        $sf_settings = '';
+        $settingsTable = $requestTable = $responseTable = $globalsTable = $userTable = '';
+        if (class_exists('sfContext', false) && sfContext::hasInstance()) {
+            $context = sfContext::getInstance();
+            $settingsTable = self::formatArrayAsHtml(sfDebug::settingsAsArray());
+            $requestTable = self::formatArrayAsHtml(sfDebug::requestAsArray($context->getRequest()));
+            $responseTable = self::formatArrayAsHtml(sfDebug::responseAsArray($context->getResponse()));
+            $userTable = self::formatArrayAsHtml(sfDebug::userAsArray($context->getUser()));
+            $globalsTable = self::formatArrayAsHtml(sfDebug::globalsAsArray());
+        }
+
+        if (isset($response) && $response) {
+            $response->sendHttpHeaders();
+        }
+
+        if ($template = self::getTemplatePathForError($format, true)) {
+            if (isset($dispatcher)) {
+                ob_start();
+
+                include $template;
+                $content = ob_get_clean();
+
+                $event = $dispatcher->filter(new sfEvent($response, 'response.filter_content'), $content);
+
+                echo $event->getReturnValue();
+            } else {
+                include $template;
+            }
+
+            return;
+        }
+    }
 
     /**
      * Returns an array of exception traces.
@@ -146,14 +254,14 @@ class sfException extends Exception
     protected static function getTraces($exception, $format = 'txt')
     {
         $traceData = $exception->getTrace();
-        array_unshift($traceData, array(
+        array_unshift($traceData, [
             'function' => '',
             'file' => null != $exception->getFile() ? $exception->getFile() : null,
             'line' => null != $exception->getLine() ? $exception->getLine() : null,
-            'args' => array(),
-        ));
+            'args' => [],
+        ]);
 
-        $traces = array();
+        $traces = [];
         if ('html' == $format) {
             $lineFormat = 'at <strong>%s%s%s</strong>(%s)<br />in <em>%s</em> line %s <a href="#" onclick="toggle(\'%s\'); return false;">...</a><br /><ul class="code" id="%s" style="display: %s">%s</ul>';
         } else {
@@ -163,7 +271,7 @@ class sfException extends Exception
         for ($i = 0, $count = count($traceData); $i < $count; ++$i) {
             $line = isset($traceData[$i]['line']) ? $traceData[$i]['line'] : null;
             $file = isset($traceData[$i]['file']) ? $traceData[$i]['file'] : null;
-            $args = isset($traceData[$i]['args']) ? $traceData[$i]['args'] : array();
+            $args = isset($traceData[$i]['args']) ? $traceData[$i]['args'] : [];
             $traces[] = sprintf(
                 $lineFormat,
                 isset($traceData[$i]['class']) ? $traceData[$i]['class'] : '',
@@ -212,7 +320,7 @@ class sfException extends Exception
         if (is_readable($file)) {
             $content = preg_split('#<br />#', preg_replace('/^<code>(.*)<\/code>$/s', '$1', highlight_file($file, true)));
 
-            $lines = array();
+            $lines = [];
             for ($i = max($line - 3, 1), $max = min($line + 3, count($content)); $i <= $max; ++$i) {
                 $lines[] = '<li'.($i == $line ? ' class="selected"' : '').'>'.$content[$i - 1].'</li>';
             }
@@ -232,9 +340,9 @@ class sfException extends Exception
      */
     protected static function formatArgs($args, $single = false, $format = 'html')
     {
-        $result = array();
+        $result = [];
 
-        $single and $args = array($args);
+        $single and $args = [$args];
 
         foreach ($args as $key => $value) {
             if (is_object($value)) {
@@ -272,7 +380,7 @@ class sfException extends Exception
         }
 
         if ('html' == $format && $file && $line && $linkFormat = sfConfig::get('sf_file_link_format', ini_get('xdebug.file_link_format'))) {
-            $link = strtr($linkFormat, array('%f' => $file, '%l' => $line));
+            $link = strtr($linkFormat, ['%f' => $file, '%l' => $line]);
             $text = sprintf('<a href="%s" title="Click to open this file" class="file_link">%s</a>', $link, $text);
         }
 

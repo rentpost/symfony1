@@ -17,8 +17,6 @@
  *    class: sfNoStorage
  *
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- *
- * @version    SVN: $Id$
  */
 class sfNoStorage extends sfStorage
 {
@@ -31,7 +29,7 @@ class sfNoStorage extends sfStorage
      *
      * @return mixed Data associated with the key
      *
-     * @throws <b>sfStorageException</b> If an error occurs while reading data from this storage
+     * @throws sfStorageException If an error occurs while reading data from this storage
      */
     public function read($key)
     {
@@ -47,7 +45,7 @@ class sfNoStorage extends sfStorage
      *
      * @return mixed Data associated with the key
      *
-     * @throws <b>sfStorageException</b> If an error occurs while removing data from this storage
+     * @throws sfStorageException If an error occurs while removing data from this storage
      */
     public function remove($key)
     {
@@ -62,9 +60,11 @@ class sfNoStorage extends sfStorage
      * @param string $key  A unique key identifying your data
      * @param mixed  $data Data associated with your key
      *
-     * @throws <b>sfStorageException</b> If an error occurs while writing to this storage
+     * @throws sfStorageException If an error occurs while writing to this storage
      */
-    public function write($key, $data) {}
+    public function write($key, $data)
+    {
+    }
 
     /**
      * Regenerates id that represents this storage.
@@ -81,7 +81,9 @@ class sfNoStorage extends sfStorage
     /**
      * Executes the shutdown procedure.
      *
-     * @throws <b>sfStorageException</b> If an error occurs while shutting down this storage
+     * @throws sfStorageException If an error occurs while shutting down this storage
      */
-    public function shutdown() {}
+    public function shutdown()
+    {
+    }
 }

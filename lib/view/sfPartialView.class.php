@@ -12,15 +12,13 @@
  * A View to render partials.
  *
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- *
- * @version    SVN: $Id$
  */
 class sfPartialView extends sfPHPView
 {
     protected $viewCache;
     protected $checkCache = false;
     protected $cacheKey;
-    protected $partialVars = array();
+    protected $partialVars = [];
 
     /**
      * Constructor.
@@ -43,7 +41,9 @@ class sfPartialView extends sfPHPView
     /**
      * Executes any presentation logic for this view.
      */
-    public function execute() {}
+    public function execute()
+    {
+    }
 
     public function setPartialVars(array $partialVars)
     {

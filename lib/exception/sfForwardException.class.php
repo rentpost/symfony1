@@ -15,7 +15,7 @@
  *
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Sean Kerr <sean@code-box.org>
- *
- * @version    SVN: $Id$
  */
-class sfForwardException extends sfException {}
+class sfForwardException extends sfException
+{
+}

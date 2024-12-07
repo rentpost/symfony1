@@ -9,18 +9,24 @@
  */
 class TestSpool implements Swift_Spool
 {
-    protected $messages = array();
+    protected $messages = [];
 
-    public function __construct() {}
+    public function __construct()
+    {
+    }
 
     public function isStarted()
     {
         return true;
     }
 
-    public function start() {}
+    public function start()
+    {
+    }
 
-    public function stop() {}
+    public function stop()
+    {
+    }
 
     public function queueMessage(Swift_Mime_Message $message)
     {
@@ -35,7 +41,7 @@ class TestSpool implements Swift_Spool
             $transport->send($message);
         }
 
-        $this->messages = array();
+        $this->messages = [];
     }
 
     public function getMessages()
@@ -50,6 +56,6 @@ class TestSpool implements Swift_Spool
 
     public function reset()
     {
-        $this->messages = array();
+        $this->messages = [];
     }
 }

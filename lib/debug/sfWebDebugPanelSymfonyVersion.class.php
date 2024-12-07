@@ -12,8 +12,6 @@
  * sfWebDebugPanelSymfonyVersion adds a panel to the web debug toolbar with the symfony version.
  *
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- *
- * @version    SVN: $Id$
  */
 class sfWebDebugPanelSymfonyVersion extends sfWebDebugPanel
 {
@@ -22,7 +20,11 @@ class sfWebDebugPanelSymfonyVersion extends sfWebDebugPanel
         return '<span id="sfWebDebugSymfonyVersion">'.SYMFONY_VERSION.'</span>';
     }
 
-    public function getPanelTitle() {}
+    public function getPanelTitle()
+    {
+    }
 
-    public function getPanelContent() {}
+    public function getPanelContent()
+    {
+    }
 }

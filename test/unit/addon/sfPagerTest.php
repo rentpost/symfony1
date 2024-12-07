@@ -13,15 +13,19 @@ require_once __DIR__.'/../../bootstrap/unit.php';
 $t = new lime_test(2);
 class myPager extends sfPager
 {
-    public function init() {}
+    public function init()
+    {
+    }
 
-    public function retrieveObject($offset) {}
+    public function retrieveObject($offset)
+    {
+    }
 
     public function getResults()
     {
         $this->setNbResults(2);
 
-        return array('foo', 'bar');
+        return ['foo', 'bar'];
     }
 }
 

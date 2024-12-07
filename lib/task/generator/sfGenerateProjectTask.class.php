@@ -14,8 +14,6 @@ require_once __DIR__.'/sfGeneratorBaseTask.class.php';
  * Generates a new project.
  *
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- *
- * @version    SVN: $Id$
  */
 class sfGenerateProjectTask extends sfGeneratorBaseTask
 {
@@ -34,15 +32,15 @@ class sfGenerateProjectTask extends sfGeneratorBaseTask
      */
     protected function configure()
     {
-        $this->addArguments(array(
+        $this->addArguments([
             new sfCommandArgument('name', sfCommandArgument::REQUIRED, 'The project name'),
             new sfCommandArgument('author', sfCommandArgument::OPTIONAL, 'The project author', 'Your name here'),
-        ));
+        ]);
 
-        $this->addOptions(array(
+        $this->addOptions([
             new sfCommandOption('orm', null, sfCommandOption::PARAMETER_REQUIRED, 'The ORM to use by default', 'Doctrine'),
             new sfCommandOption('installer', null, sfCommandOption::PARAMETER_REQUIRED, 'An installer script to execute', null),
-        ));
+        ]);
 
         $this->namespace = 'generate';
         $this->name = 'project';
@@ -79,7 +77,7 @@ EOF;
     /**
      * @see sfTask
      */
-    protected function execute($arguments = array(), $options = array())
+    protected function execute($arguments = [], $options = [])
     {
         throw new \Exception('Generating is no longer supported due to deprecated functionality, please manually create files.');
 
@@ -87,7 +85,7 @@ EOF;
             throw new sfCommandException(sprintf('A symfony project already exists in this directory (%s).', getcwd()));
         }
 
-        if (!in_array(strtolower($options['orm']), array('doctrine', 'none'))) {
+        if (!in_array(strtolower($options['orm']), ['doctrine', 'none'])) {
             throw new InvalidArgumentException(sprintf('Invalid ORM name "%s".', $options['orm']));
         }
 
@@ -109,14 +107,14 @@ EOF;
           sprintf('__DIR__.\'/..%s/autoload/sfCoreAutoload.class.php\'', str_replace(sfConfig::get('sf_root_dir'), '', sfConfig::get('sf_symfony_lib_dir'))) :
           var_export(sfConfig::get('sf_symfony_lib_dir').'/autoload/sfCoreAutoload.class.php', true);
 
-        $this->replaceTokens(array(sfConfig::get('sf_config_dir')), array('SYMFONY_CORE_AUTOLOAD' => str_replace('\\', '/', $symfonyCoreAutoload)));
+        $this->replaceTokens([sfConfig::get('sf_config_dir')], ['SYMFONY_CORE_AUTOLOAD' => str_replace('\\', '/', $symfonyCoreAutoload)]);
 
-        $this->tokens = array(
+        $this->tokens = [
             'ORM' => $this->options['orm'],
             'PROJECT_NAME' => $this->arguments['name'],
             'AUTHOR_NAME' => $this->arguments['author'],
             'PROJECT_DIR' => sfConfig::get('sf_root_dir'),
-        );
+        ];
 
         $this->replaceTokens();
 
@@ -141,6 +139,8 @@ EOF;
         $fixPerms->run();
 
         $this->replaceTokens();
+
+        return 0;
     }
 
     protected function canRunInstaller($installer)

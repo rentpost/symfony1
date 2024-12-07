@@ -20,15 +20,15 @@ class sfGenerateTaskTask extends sfBaseTask
      */
     protected function configure()
     {
-        $this->addArguments(array(
+        $this->addArguments([
             new sfCommandArgument('task_name', sfCommandArgument::REQUIRED, 'The task name (can contain namespace)'),
-        ));
+        ]);
 
-        $this->addOptions(array(
+        $this->addOptions([
             new sfCommandOption('dir', null, sfCommandOption::PARAMETER_REQUIRED, 'The directory to create the task in', 'lib/task'),
             new sfCommandOption('use-database', null, sfCommandOption::PARAMETER_REQUIRED, 'Whether the task needs model initialization to access database', sfConfig::get('sf_orm')),
             new sfCommandOption('brief-description', null, sfCommandOption::PARAMETER_REQUIRED, 'A brief task description (appears in task list)'),
-        ));
+        ]);
 
         $this->namespace = 'generate';
         $this->name = 'task';
@@ -68,7 +68,7 @@ EOF;
     /**
      * @see sfTask
      */
-    protected function execute($arguments = array(), $options = array())
+    protected function execute($arguments = [], $options = [])
     {
         throw new \Exception('Generating is no longer supported due to deprecated functionality, please manually create files.');
 
@@ -180,5 +180,7 @@ HED;
 
         $this->logSection('task', sprintf('Creating "%s" task file', $taskFile));
         file_put_contents($taskFile, $content);
+
+        return 0;
     }
 }

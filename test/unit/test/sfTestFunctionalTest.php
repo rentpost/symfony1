@@ -25,14 +25,16 @@ class mockBrowser extends sfBrowser
 
 class mockLime extends lime_test
 {
-    public function __destruct() {}
+    public function __destruct()
+    {
+    }
 }
 
 class mockTestFunctional extends sfTestFunctional
 {
-    public $called = array();
+    public $called = [];
 
-    public function call($uri, $method = 'get', $parameters = array(), $changeStack = true)
+    public function call($uri, $method = 'get', $parameters = [], $changeStack = true)
     {
         $this->called[] = func_get_args();
     }
@@ -62,4 +64,4 @@ try {
     $t->fail('->click() accepts a CSS selector');
 }
 
-$t->is_deeply($tester->called, array(array('/somewhere', 'get', array())), '->click() parses a CSS selector');
+$t->is_deeply($tester->called, [['/somewhere', 'get', []]], '->click() parses a CSS selector');
