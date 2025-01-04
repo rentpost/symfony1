@@ -353,7 +353,7 @@ abstract class sfComponent
    *
    * <code>$this->getContext()->getUser()</code>
    *
-   * @see /srv/www/src/Rentpost/Bridge/Symfony1/PortalUser.php
+   * @see /srv/www/src/Bridge/Symfony1/PortalUser.php
    *
    * @return sfUser The current sfUser implementation instance
    */
