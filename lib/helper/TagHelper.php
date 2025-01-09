@@ -80,9 +80,11 @@ function escape_javascript($javascript = '')
  *
  * @return string escaped string
  */
-function escape_once($html)
+function escape_once(?string $html): string
 {
-    return fix_double_escape(htmlspecialchars($html, ENT_COMPAT, sfConfig::get('sf_charset')));
+    return $html
+        ? fix_double_escape(htmlspecialchars($html, ENT_COMPAT, sfConfig::get('sf_charset')))
+        : '';
 }
 
 /**
