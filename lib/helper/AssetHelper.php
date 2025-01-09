@@ -84,10 +84,10 @@ function javascript_path($source, $absolute = false)
  * <b>Examples:</b>
  * <code>
  *  echo javascript_include_tag('xmlhr');
- *    => <script language="JavaScript" type="text/javascript" src="/js/xmlhr.js"></script>
+ *    => <script type="application/javascript" src="/js/xmlhr.js" defer></script>
  *  echo javascript_include_tag('common.javascript', '/elsewhere/cools');
- *    => <script language="JavaScript" type="text/javascript" src="/js/common.javascript"></script>
- *       <script language="JavaScript" type="text/javascript" src="/elsewhere/cools.js"></script>
+ *    => <script type="application/javascript" src="/js/common.javascript" defer></script>
+ *       <script type="application/javascript" src="/elsewhere/cools.js" defer></script>
  * </code>
  *
  * @param string asset names
@@ -122,7 +122,7 @@ function javascript_include_tag()
             unset($sourceOptions['raw_name']);
         }
 
-        $options = array_merge(['type' => 'text/javascript', 'src' => $source], $sourceOptions);
+        $options = array_merge(['type' => 'application/javascript', 'src' => $source, 'defer' => null], $sourceOptions);
         $tag = content_tag('script', '', $options);
 
         if (null !== $condition) {
