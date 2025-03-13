@@ -199,10 +199,13 @@ class sfWebResponse extends sfResponse
     /**
      * Sets response status code.
      *
-     * @param string $code HTTP status code
-     * @param string $name HTTP status text
+     * @param int $code     HTTP status code
+     * @param string $name  HTTP status text
      */
-    public function setStatusCode($code, $name = null)
+    public function setStatusCode(
+        int $code,
+        ?string $name = null
+    ): void
     {
         $this->statusCode = $code;
         $this->statusText = null !== $name ? $name : self::$statusTexts[$code] ?? 500;
