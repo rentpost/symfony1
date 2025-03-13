@@ -180,7 +180,7 @@ abstract class sfAction extends sfComponent
      *
      * @throws sfStopException
      */
-    public function redirect($url, $statusCode = 302)
+    public function redirect(string $url, int $statusCode = 302): void
     {
         // compatibility with url_for2() style signature
         if (is_object($statusCode) || is_array($statusCode)) {
@@ -190,7 +190,7 @@ abstract class sfAction extends sfComponent
 
         $this->getController()->redirect($url, 0, $statusCode);
 
-        throw new sfStopException();
+        throw new sfStopException;
     }
 
     /**
