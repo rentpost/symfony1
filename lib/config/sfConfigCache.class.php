@@ -322,7 +322,7 @@ class sfConfigCache
                 unlink($cacheDir);
             }
 
-            if (!mkdir($cacheDir, 0777, true) && !is_dir($cacheDir)) {
+            if (!@mkdir($cacheDir, 0777, true) && !is_dir($cacheDir)) {
                 throw new \sfCacheException(sprintf('Failed to make cache directory "%s" while generating cache for configuration file "%s".', $cacheDir, $config));
             }
         }
